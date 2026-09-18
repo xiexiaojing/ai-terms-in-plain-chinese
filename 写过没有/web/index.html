@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公众号文章检索 · 写过没有</title>
+<style>
+:root{
+  --bg:#faf8f5; --surface:#fffdfb; --line:#e8e2d9; --line-soft:#f0ebe3;
+  --ink:#1d1a16; --ink-2:#5c554b; --ink-3:#938a7d;
+  --accent:#0f7264; --accent-soft:#e6f2ef; --accent-ink:#0a5348;
+  --mark:#fde68a; --mark-ink:#4a3708;
+  --draft:#b45309; --draft-soft:#fef3e2;
+  --comic:#8b5cf6; --comic-soft:#f1ecfe;
+  --radius:14px; --shadow:0 1px 2px rgba(29,26,22,.04),0 8px 24px -12px rgba(29,26,22,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#141210; --surface:#1c1a17; --line:#2c2823; --line-soft:#242119;
+    --ink:#f0ece5; --ink-2:#b3aca1; --ink-3:#7d766b;
+    --accent:#3fb8a3; --accent-soft:#16302c; --accent-ink:#6ed7c3;
+    --mark:#6b5518; --mark-ink:#ffe9a8;
+    --draft:#e2a34a; --draft-soft:#2e2317;
+    --comic:#b79cf7; --comic-soft:#251d3a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+
+/* 顶部 */
+header{padding:52px 0 24px;transition:padding .3s ease}
+body.searched header{padding:24px 0 12px}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.brand h1{font-size:21px;font-weight:650;margin:0;letter-spacing:.2px;white-space:nowrap}
+body.searched .brand{margin-bottom:14px}
+.brand .sub{color:var(--ink-3);font-size:13px}
+.brand .grow{flex:1}
+.hero{font-size:28px;line-height:1.45;font-weight:600;margin:0 0 8px;letter-spacing:-.2px}
+.hero em{font-style:normal;color:var(--accent);}
+.hero-note{color:var(--ink-2);margin:0 0 26px;font-size:14.5px}
+body.searched .hero,body.searched .hero-note{display:none}
+
+/* 搜索框 */
+.searchbar{position:relative;display:flex;align-items:center;gap:14px;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:30px;
+  padding:8px 10px 8px 24px;box-shadow:var(--shadow);
+  transition:border-color .18s,box-shadow .18s}
+.searchbar:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),var(--shadow)}
+.searchbar > svg{flex:none;color:var(--ink-3)}
+#q{flex:1;border:0;outline:0;background:transparent;color:var(--ink);
+  font-size:19px;line-height:1.4;padding:16px 0;font-family:inherit}
+#q::placeholder{color:var(--ink-3)}
+
+/* 次要动作：一个安静的文字键，别跟箭头抢 */
+.go.ghost{flex:none;border:0;background:transparent;color:var(--ink-3);
+  font:500 14.5px/1 inherit;padding:10px 12px;border-radius:999px;cursor:pointer;
+  transition:color .15s,background .15s}
+.go.ghost:hover{color:var(--ink);background:var(--accent-soft)}
+
+/* 主动作：圆形 + 向右的箭头。左边是放大镜，右边这个是「往前走，拿答案」 */
+.go.send{flex:none;width:50px;height:50px;padding:0;border:0;border-radius:50%;
+  background:var(--accent);color:#fff;cursor:pointer;
+  display:grid;place-items:center;overflow:hidden;
+  transition:box-shadow .22s cubic-bezier(.2,.7,.3,1),background .18s}
+.go.send svg{width:21px;height:21px;stroke:currentColor;stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;fill:none;
+  /* 箭头这种形状看着总偏左，往右推一点点才是视觉居中 */
+  transform:translateX(1px);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+/* 悬停时是箭头自己往前送一下，整个按钮不动——比按钮跳起来安静 */
+.go.send:hover{box-shadow:0 3px 16px var(--accent-soft)}
+.go.send:hover svg{transform:translateX(4px)}
+.go.send:active svg{transform:translateX(2px)}
+.go:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+
+/* 过滤条 */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+  border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit}
+.chip:hover{border-color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.filters .spacer{flex:1}
+.filters .sep{width:1px;height:18px;background:var(--line);margin:0 3px}
+.meta-line{color:var(--ink-3);font-size:12.5px}
+
+/* 例子 */
+.examples{margin-top:30px}
+.examples h3{font-size:13px;font-weight:600;color:var(--ink-3);margin:0 0 12px;letter-spacing:.4px}
+.examples div{display:flex;flex-wrap:wrap;gap:9px}
+.ex{border:1px dashed var(--line);background:transparent;color:var(--ink-2);border-radius:10px;
+  padding:8px 13px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:all .15s}
+.ex:hover{border-style:solid;border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+
+/* 结果 */
+#status{color:var(--ink-3);font-size:13.5px;margin:22px 0 14px;min-height:18px}
+#status.yes{color:var(--accent-ink);font-weight:600}
+#status.maybe{color:var(--draft);font-weight:600}
+#status.no{color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow);
+  animation:rise .28s cubic-bezier(.2,.7,.3,1) backwards}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.card h2{font-size:17.5px;line-height:1.5;margin:0 0 8px;font-weight:620;letter-spacing:-.1px}
+.card h2 a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid transparent;transition:.15s}
+.card h2 a:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.card h2 span.plain{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--ink-3);margin-bottom:12px}
+.tag{background:var(--line-soft);border-radius:6px;padding:2px 8px;color:var(--ink-2)}
+.tag.draft{background:var(--draft-soft);color:var(--draft);font-weight:600}
+.tag.comic{background:var(--comic-soft);color:var(--comic);font-weight:600}
+/* 漫画缩略图（2026-09-12）：漫画条目只有标题和一行 digest，卡片太空。
+   原图就在本地，取前三张铺一行，卡片立刻有了分量。 */
+/* 尺寸挂在 flex 项（<a>）上，不要挂在 <img> 上：<a> 是 flex:0 0 auto 时宽度按内容算，
+   img 的百分比宽就没有参照物，会掉回原图尺寸把卡片撑爆。踩过一次。 */
+.thumbs{display:flex;gap:8px;margin:10px 0 2px;justify-content:flex-start}
+.thumbs a{flex:0 1 104px;max-width:104px;line-height:0}
+.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;
+  border:1px solid var(--line);background:var(--soft);display:block}
+.tag.score{background:var(--line-soft);color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums}
+.tag.score.strong{background:var(--accent-soft);color:var(--accent-ink)}
+.tag.score.weak{opacity:.62}
+.snip{color:var(--ink-2);font-size:14.5px;line-height:1.8;margin:0 0 10px;
+  padding-left:13px;border-left:2px solid var(--line)}
+.snip .h{display:block;font-size:12px;color:var(--ink-3);margin-bottom:3px}
+mark{background:var(--mark);color:var(--mark-ink);border-radius:3px;padding:0 2px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{border:1px solid var(--line);background:transparent;color:var(--ink-2);border-radius:9px;
+  padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.btn.primary{border-color:var(--accent);color:#fff;background:var(--accent)}
+.btn.primary:hover{opacity:.88;color:#fff}
+.btn.done{border-color:var(--accent);background:var(--accent);color:#fff}
+#answer{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px 14px;margin:0 0 18px;box-shadow:0 1px 2px rgba(20,40,30,.04)}
+#answer .ans-body{font-size:15.5px;line-height:1.85;color:var(--ink);white-space:pre-wrap}
+#answer .ans-body .cite{display:inline-block;min-width:17px;height:17px;line-height:17px;
+  margin:0 1px;padding:0 4px;border-radius:5px;background:#e7f0ea;color:var(--accent);
+  font-size:11px;font-weight:700;text-align:center;cursor:pointer;vertical-align:2px;user-select:none}
+#answer .ans-body .cite:hover{background:var(--accent);color:#fff}
+#answer .ans-body .err{color:#b4472e}
+#answer .src{margin-top:14px;padding-top:11px;border-top:1px dashed var(--line);
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:12.5px}
+#answer .src span{color:var(--dim)}
+#answer .src a{color:var(--accent);text-decoration:none}
+#answer .src a:hover{text-decoration:underline}
+#answer .nokey{font-size:14px;line-height:1.8;color:var(--ink)}
+#answer .nokey b{display:block;margin-bottom:6px}
+#answer .nokey ol{margin:8px 0 6px;padding-left:22px}
+#answer .nokey li{margin:3px 0}
+#answer .nokey code{background:#eef2ef;padding:1px 5px;border-radius:4px;font-size:12.5px}
+#answer .nokey a{color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.go.unconfigured{background:#9aa7a0}
+#answer .ans-foot{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted)}
+#answer.thinking .ans-body::after{content:"\258D";color:var(--accent);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.card.cited{border-color:var(--accent);box-shadow:0 0 0 3px #e7f0ea}
+button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+button.ghost:hover{color:var(--ink);border-color:var(--muted)}
+#stale{position:sticky;top:0;z-index:9;background:var(--accent);color:#fff;
+  padding:9px 16px;font-size:13.5px;display:flex;gap:12px;align-items:center;justify-content:center}
+#stale button{background:#fff;color:var(--accent);border:none;border-radius:5px;
+  padding:3px 12px;font-size:13px;cursor:pointer;font-weight:600}
+.fulltext .ft-h{display:block;color:var(--ink);font-weight:650;margin:16px 0 2px;font-size:14px}
+.fulltext .ft-h:first-child{margin-top:0}
+.fulltext{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);
+  white-space:pre-wrap;font-size:14.5px;line-height:1.85;color:var(--ink-2);
+  max-height:460px;overflow:auto}
+.empty{text-align:center;color:var(--ink-3);padding:56px 20px;font-size:14.5px}
+
+/* 复制提示 */
+#toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:all .22s;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+footer{margin-top:34px;color:var(--ink-3);font-size:12px;text-align:center;line-height:1.9}
+
+body.graphing .hero,body.graphing .hero-note,body.graphing .searchbar,
+body.graphing .filters,body.graphing .examples,body.graphing #status,
+body.graphing #answer,body.graphing #results{display:none}
+body.graphing .wrap{max-width:1120px}
+body.graphing header{padding:28px 0 8px}
+#graph-panel{margin-top:8px}
+.graph-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+#gq{flex:1;min-width:160px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:999px;padding:7px 14px;font:13.5px inherit;outline:0}
+#gq:focus{border-color:var(--accent)}
+.graph-stage{display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:stretch}
+@media (max-width:820px){.graph-stage{grid-template-columns:1fr}}
+#gcanvas{width:100%;height:620px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);cursor:grab;touch-action:none}
+#gcanvas:active{cursor:grabbing}
+#ginfo{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 16px 14px;box-shadow:var(--shadow);min-height:200px}
+#ginfo h3{margin:0 0 6px;font-size:16px;line-height:1.45}
+#ginfo h3 a{color:var(--ink);text-decoration:none}
+#ginfo h3 a:hover{color:var(--accent-ink)}
+#ginfo .gmeta{color:var(--ink-3);font-size:12.5px;margin:0 0 12px}
+#ginfo .gsec{font-size:12px;color:var(--ink-3);margin:12px 0 6px;font-weight:600}
+#ginfo .gn{display:block;width:100%;text-align:left;border:0;background:transparent;
+  color:var(--ink-2);font:13.5px/1.55 inherit;padding:4px 0;cursor:pointer}
+#ginfo .gn:hover{color:var(--accent-ink)}
+#ginfo .ghint{color:var(--ink-3);font-size:13.5px;margin:0;line-height:1.7}
+.graph-legend{color:var(--ink-3);font-size:12.5px;margin:10px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>写过没有</h1>
+      <span class="sub">公众号文章语义检索</span>
+    </div>
+    <p class="hero">这个观点，我<em>以前写过吗</em>？</p>
+    <p class="hero-note">按意思搜，不用记标题。搜到了直接把链接复制走。</p>
+
+    <div class="searchbar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+      </svg>
+      <input id="q" placeholder="比如：AI 写的代码要不要逐行看" autocomplete="off" autofocus>
+      <button class="go send" id="ask" title="问一句" aria-label="问一句">
+        <svg viewBox="0 0 24 24"><path d="M5.5 12h12M12.4 7l5.1 5-5.1 5"/></svg>
+      </button>
+    </div>
+
+    <div class="filters">
+      <button class="chip" data-kind="all" aria-pressed="true">文章 + 漫画</button>
+      <button class="chip" data-kind="article" aria-pressed="false">只看文章</button>
+      <button class="chip" data-kind="comic" aria-pressed="false">只看漫画</button>
+      <button class="chip" data-kind="file" aria-pressed="false">我的文件</button>
+      <span class="spacer"></span>
+      <button class="chip" data-order="relevance" aria-pressed="true">按相关度</button>
+      <button class="chip" data-order="date" aria-pressed="false">按时间</button>
+    </div>
+    <div class="meta-line" id="stats"></div>
+  </header>
+
+  <div class="examples" id="examples">
+    <h3>随便试试</h3>
+    <div>
+      <button class="ex">AI 写的代码要不要逐行 review</button>
+      <button class="ex">怎么省 token</button>
+      <button class="ex">让 AI 查数据库为什么不准</button>
+      <button class="ex">缓存不是性能优化的答案</button>
+      <button class="ex">带学员怎么教才有效</button>
+      <button class="ex">上了 K8s 就算云原生吗</button>
+      <button class="ex">杀猪盘怎么套人</button>
+      <button class="ex">孩子学不会是我讲错了</button>
+    </div>
+  </div>
+
+  <div id="status"></div>
+  <div id="answer" hidden>
+    <div class="ans-body"></div>
+    <div class="ans-foot">上面每句话都出自下面这几篇，点角标跳到出处。</div>
+  </div>
+  <div id="results"></div>
+  <div id="graph-panel" hidden>
+    <div class="graph-toolbar">
+      <input id="gq" placeholder="在图里找一篇…" autocomplete="off">
+      <button class="chip" data-gedge="all" aria-pressed="true">全部关系</button>
+      <button class="chip" data-gedge="cite" aria-pressed="false">只看互链</button>
+      <span class="sep"></span>
+      <button class="chip" data-gkind="all" aria-pressed="true">文章+漫画</button>
+      <button class="chip" data-gkind="article" aria-pressed="false">只看文章</button>
+      <button class="chip" data-gkind="comic" aria-pressed="false">只看漫画</button>
+    </div>
+    <div class="graph-stage">
+      <canvas id="gcanvas"></canvas>
+      <aside id="ginfo"><p class="ghint">点一篇，看它引用了谁、题义上挨着谁。滚轮缩放，拖空白处平移。</p></aside>
+    </div>
+    <p class="graph-legend">颜色是主题簇。实线是文里点名引用；点一篇才画出题义接近的虚线。</p>
+  </div>
+  <footer id="foot"></footer>
+</div>
+<div id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const qEl = $('#q'), resEl = $('#results'), statusEl = $('#status');
+let order = 'relevance', kind = 'all', mode = 'hybrid', terms = [], seq = 0, canAnswer = true;
+let startedAt = null;
+
+// 改完代码重启服务，开着的页面还跑着旧 JS——看着就像「改了没生效」。
+// 服务每次响应都带自己的启动时刻，跟页面记下的对不上就摆条提示。
+function noteServerRestart(ts){
+  if (!ts) return;
+  if (startedAt === null){ startedAt = ts; return; }
+  if (ts === startedAt || document.querySelector('#stale')) return;
+  const bar = document.createElement('div');
+  bar.id = 'stale';
+  bar.innerHTML = `服务重启过了，这个页面还是旧版本。<button>刷新一下</button>`;
+  bar.querySelector('button').onclick = () => location.reload();
+  document.body.prepend(bar);
+}
+
+{ const m = new URLSearchParams(location.search).get('mode'); if (m === 'vector' || m === 'lex') mode = m; }
+fetch('/api/stats').then(r => r.json()).then(s => {
+  $('#stats').textContent =
+    (canAnswer = s.can_answer !== false, markAskDisabled(),
+     `${s.articles - s.comics - (s.files || 0)} 篇文章 + ${s.comics} 篇漫画 · ${s.earliest.slice(0,4)}–${s.latest.slice(0,4)} · 篇篇能点开原文`
+     + (s.files ? ` · 我的文件 ${s.files} 份` : '')
+     + (mode !== 'hybrid' ? ` · 检索方式：${mode === 'vector' ? '只用向量（按意思）' : '只用字面（按字）'}` : ''));
+  $('#foot').textContent = `检索在本机跑：向量模型 ${s.model}，索引建于 ${s.built_at}`
+    + (s.can_answer === false ? ' · 未配回答模型' : ' · 已接模型');
+});
+
+document.querySelectorAll('.filters .chip').forEach(chip => chip.onclick = () => {
+  const group = chip.dataset.kind ? 'kind' : chip.dataset.mode ? 'mode' : 'order';
+  document.querySelectorAll(`.chip[data-${group}]`).forEach(c => c.setAttribute('aria-pressed', c === chip));
+  if (group === 'kind') kind = chip.dataset.kind;
+  else if (group === 'mode') mode = chip.dataset.mode;
+  else order = chip.dataset.order;
+  if (qEl.value.trim()) ask();
+});
+document.querySelectorAll('.ex').forEach(b => b.onclick = () => { qEl.value = b.textContent; ask(); });
+
+$('#ask').onclick = () => ask(true);
+qEl.onkeydown = e => { if (e.key === 'Enter') (e.shiftKey ? search() : ask()); };
+document.onkeydown = e => {
+  if (e.key === '/' && document.activeElement !== qEl) { e.preventDefault(); qEl.focus(); qEl.select(); }
+};
+
+function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+// 高亮限量：像「token」这种词一段里出现十几次，全标黄反而看不清哪儿是重点
+function highlight(text, cap = 6){
+  let html = esc(text);
+  const uniq = [...new Set(terms)].filter(t => t.length >= 2).sort((a,b) => b.length - a.length);
+  if (!uniq.length) return html;
+  const re = new RegExp('(' + uniq.map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|') + ')', 'gi');
+  let n = 0;
+  return html.replace(re, m => (++n <= cap ? `<mark>${m}</mark>` : m)).replace(/<\/mark><mark>/g, '');
+}
+
+const ansEl = $('#answer'), ansBody = ansEl.querySelector('.ans-body');
+
+// 问答：先把检索到的文章铺出来，答案再一句句流进来。
+// 分不够时后端根本不叫模型，直接回 no_answer——「没写过」是这个库敢下的结论，
+// 让模型对着一堆沾边的片段硬凑，才是 RAG 最常见的翻车方式。
+function ask(fromButton){
+  const q = qEl.value.trim();
+  if (!q) return;
+  if (!canAnswer){                      // 没配模型：照样把文章查出来，想配的人点按钮看步骤
+    search();
+    if (fromButton){ ansEl.hidden = false; ansEl.classList.remove('thinking'); ansBody.innerHTML = noKeyHtml(); }
+    return;
+  }
+  const my = ++seq;
+  $('#ask').disabled = true;
+  document.body.classList.add('searched');
+  $('#examples').style.display = 'none';
+  statusEl.className = ''; statusEl.textContent = kind === 'file' ? '正在翻你的文件…' : '正在翻我写过的东西…';
+  resEl.innerHTML = '';
+  ansBody.textContent = ''; ansEl.hidden = true; ansEl.classList.remove('thinking');
+
+  let raw = '', got = false;
+  // 筛选和检索模式要一起带上，否则「问一句」永远走混合检索，切了开关没反应
+  const es = new EventSource(`/api/ask?q=${encodeURIComponent(q)}&mode=${mode}&kind=${kind}`);
+  const finish = () => { es.close(); if (my === seq){ $('#ask').disabled = false;
+    ansEl.classList.remove('thinking'); } };
+
+  es.onmessage = ev => {
+    if (my !== seq) return finish();
+    const d = JSON.parse(ev.data);
+    if (d.type === 'sources'){
+      terms = d.terms || [];
+      askSources = d.results || [];
+      noteServerRestart(d.started_at);
+      render({results: d.results}, true);
+      statusEl.textContent = '';
+      ansEl.hidden = false; ansEl.classList.add('thinking');
+      ansEl.querySelector('.ans-foot').textContent = kind === 'file' ? '上面每句话都出自下面的文件，点角标跳到出处。' : '上面每句话都出自下面这几篇，点角标跳到出处。';
+    } else if (d.type === 'no_key'){
+      ansEl.hidden = false; ansEl.classList.remove('thinking');
+      ansBody.innerHTML = noKeyHtml();
+      canAnswer = false; markAskDisabled();
+    } else if (d.type === 'no_answer'){
+      ansEl.hidden = true;
+      statusEl.className = 'no';
+      statusEl.textContent = kind === 'file' ? '文件里没有这件事。下面这些只沾了点边，没替你编。'
+        : '这个话题我没写过。下面这些只沾了点边，没敢替我编。';
+    } else if (d.type === 'delta'){
+      got = true; raw += d.text; ansBody.innerHTML = withCites(raw.replace(/^\s+/, ''));   // 模型爱先吐两个空行，pre-wrap 会把它们原样撑出来
+    } else if (d.type === 'error'){
+      ansEl.hidden = false; ansEl.classList.remove('thinking');
+      ansBody.innerHTML = `<span class="err">${esc(d.text)}</span>`;
+    } else if (d.type === 'done'){
+      if (!got && !ansBody.textContent) ansEl.hidden = true;
+      else if (got) renderSources(raw);
+      finish();
+    }
+  };
+  es.onerror = () => { if (!got) { ansEl.hidden = true; statusEl.textContent = '连接断了，再试一次'; } finish(); };
+}
+
+// [1] [2] 变成可点的角标，点了滚到对应那篇并高亮
+// 学员拿到这份 demo 时多半还没配模型。检索是完整的，能问不能答——
+// 与其让他们点一次才看见报错，不如进门就说清楚，并且把配置步骤写全。
+function noKeyHtml(){
+  return `<div class="nokey">
+    <b>这台机器还没配模型，所以只能查、不能问。</b>
+    下面的文章检索是完整的，可以照常用。想让它开口回答，配一下：
+    <ol>
+      <li>把项目根目录的 <code>.env.example</code> 复制成 <code>.env</code></li>
+      <li>填上 <code>LLM_API_KEY=</code>，需要的话改 <code>LLM_BASE_URL</code> 和 <code>LLM_MODEL</code></li>
+      <li><code>./daemon.sh restart</code></li>
+    </ol>
+    哪一家都行：OpenAI、通义、智谱、硅基流动、本地 Ollama，只要提供
+    <code>/chat/completions</code> 和 <code>/embeddings</code>。<code>.env.example</code> 里有样例。
+    <b>换了向量模型要重建索引</b>（<code>./refresh.sh</code>），旧向量跟新查询不在一个空间。</div>`;
+}
+
+function markAskDisabled(){
+  const b = $('#ask');
+  b.classList.toggle('unconfigured', !canAnswer);
+  // 2026-09-14：主键换成圆形箭头（SVG）之后，这儿原来那行 textContent 会把图标整个擦掉。
+  // 状态只改 title / aria-label，别动按钮里的内容。
+  b.title = canAnswer ? '问一句' : '问一句（还没配模型，点一下看怎么配）';
+  b.setAttribute('aria-label', b.title);
+}
+
+let askSources = [];
+
+// 模型不一定每段都带 [1] 角标（实测就漏过）。可溯源是这个功能的命门，
+// 不能指望它自觉：答案下面固定列出用到的文章，带链接，点得回去核对。
+function renderSources(text){
+  if (!askSources.length) return;
+  const cited = new Set((text.match(/\[(\d+)\]/g) || []).map(m => +m.slice(1, -1)));
+  const list = askSources
+    .map((r, i) => ({...r, n: i + 1}))
+    .filter(r => !cited.size || cited.has(r.n))
+    .slice(0, 4);
+  if (!list.length) return;
+  const links = list.map(r =>
+    `<a href="${esc(r.link)}" target="_blank" rel="noopener">[${r.n}]《${esc(r.title)}》</a>`).join('');
+  ansBody.insertAdjacentHTML('beforeend',
+    `<div class="src"><span>出处</span>${links}</div>`);
+}
+
+function withCites(text){
+  return esc(text).replace(/\[(\d{1,2})\]/g, (_, n) => `<span class="cite" data-n="${n}">${n}</span>`);
+}
+ansBody.addEventListener('click', e => {
+  const n = e.target.dataset && e.target.dataset.n;
+  if (!n) return;
+  const card = resEl.children[+n - 1];
+  if (!card) return;
+  document.querySelectorAll('.card.cited').forEach(c => c.classList.remove('cited'));
+  card.classList.add('cited');
+  card.scrollIntoView({behavior: 'smooth', block: 'center'});
+});
+
+async function search(){
+  const q = qEl.value.trim();
+  if (!q) return;
+  // 用序号而不是 busy 开关：切筛选时上一个请求常常还在飞，
+  // busy 会把这次点击整个丢掉——筛选条已经变了，结果还是旧的。
+  const my = ++seq;
+  document.body.classList.add('searched');
+  $('#examples').style.display = 'none';
+  statusEl.textContent = '正在按意思找…';
+  try{
+    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&order=${order}&kind=${kind}&mode=${mode}&limit=20`);
+    const data = await r.json();
+    if (my !== seq) return;              // 有更新的请求在飞，这次结果作废
+    if (data.error) throw new Error(data.error);
+    terms = data.terms || [];
+    render(data);
+  }catch(err){
+    if (my !== seq) return;
+    statusEl.textContent = '出错了：' + err.message;
+    resEl.innerHTML = '';
+  }finally{ }
+}
+
+function render(data, quiet){
+  noteServerRestart(data.started_at);
+  const rs = data.results;
+  // 阈值按 20 个「确定写过」+ 12 个「确定没写过」的查询标出来（embo-01 的尺度）：
+  // 写过落在 0.32~1.14，没写过落在 0.22~0.29，中间空 0.034。切在 0.60 和 0.30。
+  // 「维果斯基」0.32、「怎么跟老板提涨薪」0.57 落进中间档 —— 她确实只顺带提过，判「擦边」是对的。
+  // 直接把结论说出来，省得她自己一篇篇点开确认。
+  // 「写过」要两个条件同时成立：分数够高，而且有一篇文章的标题就在讲这件事。
+  // 只看分数会把「顺带提过一句」当成写过——搜「Redis 缓存穿透」，《面试题总结》里
+  // 命中 19 块、分数 0.99，可她从没专门写过这个。标题信号把这类挡在「擦边」档。
+  const best = rs.length ? rs[0].score : 0;
+  const titled = rs.length ? (rs[0].title_match ?? 1) >= 0.70 : false;
+  const verdict = (best >= 0.60 && titled)
+    ? {cls: 'yes', text: rs.length > 1 ? `写过。最贴的是第一篇，另有 ${rs.length - 1} 篇沾边` : '写过，就下面这篇'}
+    : best >= 0.30
+    ? {cls: 'maybe', text: titled ? '像是碰过，第一篇最接近，点开看看'
+                                  : '擦边提过几句，但没有一篇是正面讲这个的'}
+    : {cls: 'no', text: '看着没写过。下面这些只沾了点边'};
+  if (!quiet){ statusEl.className = verdict.cls; statusEl.textContent = rs.length ? verdict.text : ''; }
+  if (!rs.length){
+    resEl.innerHTML = `<div class="empty">没搜到。<br>换个说法试试，或者换一个筛选。</div>`;
+    return;
+  }
+  resEl.innerHTML = '';
+  rs.forEach((r, i) => { r.rel = Math.round(Math.min(r.score, 1) * 100); resEl.appendChild(card(r, i)); });
+}
+
+function card(r, i, top){
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.style.animationDelay = Math.min(i * 24, 260) + 'ms';
+
+  const isFile = r.kind === 'file';       // 「我的文件」：读者自己放进去的，没有链接，看全文就是它本身
+  const titleHtml = isFile ? esc(r.title)
+    : `<a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.title)}</a>`;
+
+  const tags = [];
+  if (r.date) tags.push(`<span>${r.date}</span>`);
+  if (r.kind === 'comic') tags.push(`<span class="tag comic">漫画</span>`);
+  if (isFile) tags.push(`<span class="tag">我的文件</span>`);
+  if (r.read_num != null) tags.push(`<span class="tag">${r.read_num} 阅读</span>`);
+  if (r.hit_count > 1) tags.push(`<span class="tag">文中 ${r.hit_count} 段相关</span>`);
+  const lvl = r.score >= 0.60 ? ' strong' : r.score >= 0.30 ? '' : ' weak';
+  tags.push(`<span class="tag score${lvl}" title="语义 ${(r.vec_score*100).toFixed(0)} / 字面 ${(r.lex_score*100).toFixed(0)}">匹配 ${r.rel}%</span>`);
+
+  // 漫画常常没有正文，摘要就是标题本身，显示出来等于重复一遍。有图就不摆这句废话。
+  const 去掉重复标题 = (s) => {
+    const a = s.text.replace(/<[^>]+>/g, '').replace(/\s/g, '');
+    const b = (r.title || '').replace(/\s/g, '');
+    return !(a && b && (a === b || (a.length < b.length + 6 && b.includes(a.slice(0, 12)))));
+  };
+  const snips = r.snippets.filter(s => !r.thumbs || 去掉重复标题(s)).map(s =>
+    `<p class="snip">${s.heading ? `<span class="h">${esc(s.heading)}</span>` : ''}${highlight(s.text)}</p>`
+  ).join('');
+
+  // 漫画有图就铺一行缩略图，点开原文
+  const thumbs = r.thumbs
+    ? `<div class="thumbs">` + Array.from({length: r.thumbs}, (_, n) =>
+        `<a href="${esc(r.link)}" target="_blank" rel="noopener">` +
+        `<img loading="lazy" alt="" src="/api/thumb?id=${encodeURIComponent(r.id)}&n=${n}"></a>`
+      ).join('') + `</div>`
+    : '';
+
+  el.innerHTML = `
+    <h2>${titleHtml}</h2>
+    <div class="tags">${tags.join('')}</div>
+    ${thumbs}
+    ${snips}
+    <div class="actions"></div>
+    <div class="fulltext" hidden></div>`;
+
+  const actions = el.querySelector('.actions');
+  if (isFile) { actions.appendChild(fullBtn(r, el)); return el; }
+  actions.appendChild(button('复制链接', () => r.link, true));
+  actions.appendChild(button('复制标题 + 链接', () => `《${r.title}》\n${r.link}`));
+  actions.appendChild(button('复制 Markdown 链接', () => `[《${r.title}》](${r.link})`));
+  const open = document.createElement('a');
+  open.className = 'btn'; open.href = r.link; open.target = '_blank'; open.rel = 'noopener';
+  open.textContent = '打开原文';
+  actions.appendChild(open);
+  if (r.has_text) actions.appendChild(fullBtn(r, el));
+  return el;
+}
+
+function button(label, getText, primary){
+  const b = document.createElement('button');
+  b.className = 'btn' + (primary ? ' primary' : '');
+  b.textContent = label;
+  b.onclick = async () => {
+    const text = getText();
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch{
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const old = b.textContent;
+    b.textContent = '已复制 ✓'; b.classList.add('done');
+    setTimeout(() => { b.textContent = old; b.classList.remove('done'); }, 1400);
+    toast(text.length > 46 ? text.slice(0, 46).replace(/\n/g, ' ') + '…' : text.replace(/\n/g, ' '));
+  };
+  return b;
+}
+
+function fullBtn(r, card){
+  const box = card.querySelector('.fulltext');
+  const b = document.createElement('button');
+  b.className = 'btn'; b.textContent = '展开全文';
+  b.onclick = async () => {
+    if (!box.hidden){ box.hidden = true; b.textContent = '展开全文'; return; }
+    if (!box.dataset.loaded){
+      b.textContent = '加载中…';
+      const d = await (await fetch('/api/doc?id=' + encodeURIComponent(r.id))).json();
+      box.innerHTML = highlight(d.text || '（本地没存这篇的正文，点上面的「打开原文」看）', 40)
+        .replace(/^#{2,4}\s+(.+)$/gm, '<b class="ft-h">$1</b>')   // 小标题别露出井号
+        .replace(/^\s*-{3,}\s*$/gm, '');
+      box.dataset.loaded = '1';
+    }
+    box.hidden = false; b.textContent = '收起全文';
+  };
+  return b;
+}
+
+let toastTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = '已复制：' + msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ——— 知识图谱 ———
+const HUES = [168, 28, 262, 210, 45, 340, 125, 190, 15, 280, 85, 230, 355, 155, 50, 300];
+const G = {data:null, sel:null, edge:'all', kind:'all', q:'',
+           scale:1, ox:0, oy:0, drag:null, hover:null};
+const canvas = $('#gcanvas'), ginfo = $('#ginfo');
+
+function commColor(i, a=1){
+  return `hsla(${HUES[i % HUES.length]} 42% 42% / ${a})`;
+}
+function setView(which){
+  const graphing = which === 'graph';
+  document.body.classList.toggle('graphing', graphing);
+  $('#graph-panel').hidden = !graphing;
+  if (graphing) loadGraph();
+}
+// 2026-09-17 作者要页面回到 9-13 那一版：「检索／知识图谱」切换和三个检索模式按钮都撤了。
+// 图谱代码留着，只能用 ?view=graph 打开；检索模式仍认 ?mode=vector|lex。
+if (new URLSearchParams(location.search).get('view') === 'graph') setView('graph');
+
+
+async function loadGraph(){
+  if (G.data){ drawGraph(); return; }
+  ginfo.innerHTML = '<p class="ghint">正在铺图…</p>';
+  try{
+    const r = await fetch('/api/graph');
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    G.data = d;
+    G.byId = Object.fromEntries(d.nodes.map(n => [n.id, n]));
+    noteServerRestart(d.started_at);
+    drawGraph();
+    showGraphInfo(null);
+  }catch(err){
+    ginfo.innerHTML = `<p class="ghint">图谱没建起来：${esc(err.message)}</p>`;
+  }
+}
+
+document.querySelectorAll('#graph-panel .chip').forEach(chip => chip.onclick = () => {
+  if (chip.dataset.gedge){
+    G.edge = chip.dataset.gedge;
+    document.querySelectorAll('#graph-panel [data-gedge]').forEach(c =>
+      c.setAttribute('aria-pressed', c === chip));
+  } else if (chip.dataset.gkind){
+    G.kind = chip.dataset.gkind;
+    document.querySelectorAll('#graph-panel [data-gkind]').forEach(c =>
+      c.setAttribute('aria-pressed', c === chip));
+  }
+  drawGraph();
+});
+$('#gq').oninput = () => { G.q = $('#gq').value.trim().toLowerCase(); drawGraph(); };
+
+function visibleNode(n){
+  if (G.kind !== 'all' && n.kind !== G.kind) return false;
+  if (G.q && !n.title.toLowerCase().includes(G.q) && !(n.short||'').toLowerCase().includes(G.q)) return false;
+  return true;
+}
+function toXY(n){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  return [G.ox + n.x / 1000 * w * G.scale, G.oy + n.y / 1000 * h * G.scale];
+}
+function hitNode(mx, my){
+  if (!G.data) return null;
+  let best = null, bestD = 14;
+  for (const n of G.data.nodes){
+    if (!visibleNode(n)) continue;
+    const [x,y] = toXY(n);
+    const d = Math.hypot(mx-x, my-y);
+    if (d < bestD){ best = n; bestD = d; }
+  }
+  return best;
+}
+
+function drawGraph(){
+  if (!G.data) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== w*dpr || canvas.height !== h*dpr){
+    canvas.width = w*dpr; canvas.height = h*dpr;
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+
+  const vis = new Set(G.data.nodes.filter(visibleNode).map(n => n.id));
+  const sel = G.sel && vis.has(G.sel) ? G.sel : null;
+  const neigh = new Set();
+  if (sel){
+    for (const e of G.data.edges){
+      if (G.edge === 'cite' && e.type !== 'cite') continue;
+      if (e.source === sel && vis.has(e.target)) neigh.add(e.target);
+      if (e.target === sel && vis.has(e.source)) neigh.add(e.source);
+    }
+  }
+
+  // 簇名
+  ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif';
+  for (const c of G.data.communities){
+    const members = G.data.nodes.filter(n => n.community === c.id && vis.has(n.id));
+    if (!members.length) continue;
+    const [x,y] = toXY({x:c.x, y:c.y});
+    ctx.fillStyle = commColor(c.id, .14);
+    ctx.beginPath(); ctx.arc(x, y, 28 + Math.sqrt(members.length)*6, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = commColor(c.id, .85);
+    ctx.textAlign = 'center';
+    ctx.fillText(c.label, x, y - 34 - Math.sqrt(members.length)*3);
+  }
+
+  for (const e of G.data.edges){
+    if (G.edge === 'cite' && e.type !== 'cite') continue;
+    if (!vis.has(e.source) || !vis.has(e.target)) continue;
+    const a = G.byId[e.source], b = G.byId[e.target];
+    const hot = sel && (e.source === sel || e.target === sel);
+    if (e.type !== 'cite' && !hot) continue;   // 近邻边太多，只在点中一篇时画
+    if (!a || !b) continue;
+    const [x1,y1] = toXY(a), [x2,y2] = toXY(b);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = e.type === 'cite'
+      ? (hot ? 'rgba(15,114,100,.7)' : 'rgba(15,114,100,.22)')
+      : (hot ? 'rgba(139,92,246,.55)' : 'rgba(139,92,246,.12)');
+    ctx.lineWidth = hot ? 1.6 : 1;
+    if (e.type !== 'cite') ctx.setLineDash([4,4]); else ctx.setLineDash([]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  for (const n of G.data.nodes){
+    if (!vis.has(n.id)) continue;
+    const [x,y] = toXY(n);
+    const r = n.id === sel ? 7.5 : (neigh.has(n.id) ? 5.5 : 3.8);
+    const dim = sel && n.id !== sel && !neigh.has(n.id);
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle = commColor(n.community, dim ? .22 : 1);
+    ctx.fill();
+    if (n.id === sel || neigh.has(n.id) || G.q){
+      ctx.fillStyle = dim ? 'rgba(92,85,75,.4)' : getComputedStyle(document.body).getPropertyValue('--ink') || '#1d1a16';
+      ctx.font = (n.id === sel ? '600 12.5px ' : '12px ') + '-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(n.short.slice(0,16), x + r + 5, y + 4);
+    }
+  }
+}
+
+function showGraphInfo(n){
+  if (!n){
+    const st = G.data && G.data.stats;
+    ginfo.innerHTML = st
+      ? `<p class="ghint">${st.articles} 篇，${st.communities} 个主题簇。互链 ${st.cites} 条，题义近邻 ${st.similar} 条。点一篇看它连着谁。</p>`
+      : `<p class="ghint">点一篇，看它引用了谁、题义上挨着谁。滚轮缩放，拖空白处平移。</p>`;
+    return;
+  }
+  const cites = [], sims = [];
+  for (const e of G.data.edges){
+    const other = e.source === n.id ? e.target : (e.target === n.id ? e.source : null);
+    if (!other) continue;
+    const o = G.byId[other];
+    if (!o) continue;
+    (e.type === 'cite' ? cites : sims).push(o);
+  }
+  const row = (o) => `<button class="gn" data-id="${esc(o.id)}">${esc(o.short)}</button>`;
+  ginfo.innerHTML = `
+    <h3><a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a></h3>
+    <p class="gmeta">${n.date || ''}${n.kind==='comic' ? ' · 漫画' : ''} · ${G.data.communities[n.community]?.label || ''}</p>
+    ${cites.length ? `<div class="gsec">文里点名引用</div>${cites.map(row).join('')}` : ''}
+    ${sims.length ? `<div class="gsec">题义接近</div>${sims.map(row).join('')}` : ''}
+    ${!cites.length && !sims.length ? `<p class="ghint">这篇暂时没连上别人。</p>` : ''}
+    <div class="actions" style="margin-top:14px"></div>`;
+  const actions = ginfo.querySelector('.actions');
+  const open = document.createElement('a');
+  open.className = 'btn primary'; open.href = n.link; open.target = '_blank'; open.rel = 'noopener';
+  open.textContent = '打开原文';
+  actions.appendChild(open);
+  ginfo.querySelectorAll('.gn').forEach(b => b.onclick = () => {
+    G.sel = b.dataset.id; showGraphInfo(G.byId[G.sel]); drawGraph();
+  });
+}
+
+canvas.addEventListener('pointerdown', e => {
+  const r = canvas.getBoundingClientRect();
+  const n = hitNode(e.clientX - r.left, e.clientY - r.top);
+  if (n){ G.sel = n.id; showGraphInfo(n); drawGraph(); return; }
+  G.drag = {x: e.clientX - G.ox, y: e.clientY - G.oy};
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', e => {
+  const r = canvas.getBoundingClientRect();
+  if (G.drag){ G.ox = e.clientX - G.drag.x; G.oy = e.clientY - G.drag.y; drawGraph(); return; }
+  const n = hitNode(e.clientX - r.left, e.clientY - r.top);
+  canvas.style.cursor = n ? 'pointer' : 'grab';
+});
+canvas.addEventListener('pointerup', () => { G.drag = null; });
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  const old = G.scale;
+  G.scale = Math.min(3.2, Math.max(0.45, G.scale * (e.deltaY < 0 ? 1.12 : 0.89)));
+  G.ox = mx - (mx - G.ox) * (G.scale / old);
+  G.oy = my - (my - G.oy) * (G.scale / old);
+  drawGraph();
+}, {passive:false});
+window.addEventListener('resize', () => { if (! $('#graph-panel').hidden) drawGraph(); });
+
+</script>
+</body>
+</html>

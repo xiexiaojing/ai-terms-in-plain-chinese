@@ -1,0 +1,373 @@
+<title>一次搜索的八站路</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F7F6F3; --panel:#FFFFFF; --ink:#1B2027; --body:#33393F; --dim:#6E757D;
+  --line:#DFDCD5; --rail:#C9C4B9; --accent:#9A6E1C; --accent-soft:#F3E9D4;
+  --good:#3B6349; --bad:#9B3B2E;
+  --term-bg:#20262E; --term-fg:#D6DAE0; --term-dim:#7E8894; --term-hi:#E5B95C; --term-bad:#E08B76;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --han:'PingFang SC','Hiragino Sans GB','Source Han Sans SC','Noto Sans CJK SC',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#14181D; --panel:#1B2026; --ink:#E9E6DF; --body:#C6C9CC; --dim:#8A9099;
+    --line:#2C333B; --rail:#3A424B; --accent:#D6A94E; --accent-soft:#2E2716;
+    --good:#7BB08C; --bad:#D98A78; --term-bg:#0E1216; --term-fg:#CDD3DA;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#14181D; --panel:#1B2026; --ink:#E9E6DF; --body:#C6C9CC; --dim:#8A9099;
+  --line:#2C333B; --rail:#3A424B; --accent:#D6A94E; --accent-soft:#2E2716;
+  --good:#7BB08C; --bad:#D98A78; --term-bg:#0E1216; --term-fg:#CDD3DA;
+}
+
+body{background:var(--ground);color:var(--body);font-family:var(--han);
+  font-size:15.5px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:44px 24px 90px}
+h1,h2,h3,h4{color:var(--ink);text-wrap:balance;line-height:1.35}
+
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:20px}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px}
+h1{font-size:38px;font-weight:700;letter-spacing:-.01em;margin:0 0 10px}
+.dek{font-size:16.5px;color:var(--dim);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 26px;margin-top:20px;
+  font-family:var(--mono);font-size:12px;color:var(--dim)}
+.meta b{color:var(--ink);font-weight:600}
+
+.prep{background:var(--accent-soft);border-left:3px solid var(--accent);
+  padding:16px 20px;margin:26px 0 40px;border-radius:0 4px 4px 0}
+.prep h3{font-size:14px;margin:0 0 8px;font-family:var(--mono);letter-spacing:.04em}
+.prep p{margin:0 0 8px}
+.prep p:last-child{margin-bottom:0}
+
+/* 数据流轨道 */
+.track{position:relative;padding-left:52px}
+.track::before{content:"";position:absolute;left:15px;top:8px;bottom:40px;width:1px;background:var(--rail)}
+.stop{position:relative;margin-bottom:54px}
+.stop::before{content:attr(data-n);position:absolute;left:-52px;top:-2px;
+  width:31px;height:31px;border-radius:50%;background:var(--panel);border:1px solid var(--rail);
+  color:var(--accent);font-family:var(--mono);font-size:13px;font-weight:600;
+  display:grid;place-items:center}
+.stop h2{font-size:22px;font-weight:700;margin:0 0 4px}
+.stop .when{font-family:var(--mono);font-size:11.5px;color:var(--dim);letter-spacing:.06em;margin-bottom:14px}
+.stop p{margin:0 0 13px}
+.stop p:last-child{margin-bottom:0}
+
+/* 演示块 */
+.run{margin:18px 0;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.run .cmd{background:var(--term-bg);color:var(--term-fg);font-family:var(--mono);
+  font-size:12.5px;padding:11px 16px;display:flex;gap:9px;align-items:baseline}
+.run .cmd::before{content:"▶";color:var(--term-hi);flex:none}
+.run pre{margin:0;background:var(--term-bg);color:var(--term-fg);font-family:var(--mono);
+  font-size:12px;line-height:1.75;padding:0 16px 13px;overflow-x:auto}
+.run pre b{color:var(--term-hi);font-weight:500}
+.run pre i{color:var(--term-bad);font-style:normal}
+.run pre s{color:var(--term-dim);text-decoration:none}
+.run .note{background:var(--panel);padding:11px 16px;font-size:14px;color:var(--body);
+  border-top:1px solid var(--line)}
+.run .note b{color:var(--ink)}
+
+.crash{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--bad);
+  border-radius:0 5px 5px 0;padding:16px 20px;margin:18px 0}
+.crash .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--bad);display:block;margin-bottom:7px}
+.crash p{margin:0 0 10px;font-size:14.5px}
+.crash p:last-child{margin-bottom:0}
+
+.data{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px}
+.data th{text-align:left;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim);padding:0 12px 8px 0;border-bottom:1px solid var(--line)}
+.data td{padding:8px 12px 8px 0;border-bottom:1px solid var(--line);vertical-align:baseline}
+.data td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.data tr:last-child td{border-bottom:none}
+.scroll{overflow-x:auto}
+
+code{font-family:var(--mono);font-size:.9em;background:var(--panel);padding:1px 5px;
+  border-radius:3px;border:1px solid var(--line)}
+b{color:var(--ink);font-weight:600}
+.say{border-left:2px solid var(--rail);padding-left:16px;margin:16px 0;color:var(--dim);font-size:14.5px}
+.say b{color:var(--body)}
+
+.takeaway{border-top:2px solid var(--ink);margin-top:20px;padding-top:26px}
+.takeaway h2{font-size:24px;margin:0 0 18px}
+.tk{display:grid;gap:14px}
+.tk div{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:baseline}
+.tk .i{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11.5px;color:var(--dim);line-height:1.8}
+@media (max-width:640px){
+  .wrap{padding:28px 16px 60px}
+  h1{font-size:29px}
+  .track{padding-left:0}
+  .track::before{display:none}
+  .stop::before{position:static;margin-bottom:10px}
+}
+</style>
+
+<div class="wrap">
+
+<div class="masthead">
+  <div class="kicker">VIP 课 · 实操课件</div>
+  <h1>一次搜索的八站路</h1>
+  <p class="dek">跟着一个问题在 RAG 系统里走完全程。每一站都能当场跑给你看，命令和输出都在下面，你们手上那套一模一样，回去能复现。</p>
+  <div class="meta">
+    <span><b>90</b> 分钟</span>
+    <span>语料 <b>660</b> 篇 · <b>3968</b> 块</span>
+    <span>课前准备 <b>27</b> 秒</span>
+    <span><b>11</b> 个演示</span>
+  </div>
+</div>
+
+<div class="prep">
+  <h3>开课前先跑起来</h3>
+  <p>解开发给你们的包，三条命令，实测 27 秒到服务就绪。</p>
+  <div class="run" style="margin:12px 0 10px">
+    <div class="cmd">python3 -m venv .venv &amp;&amp; .venv/bin/pip install -r requirements.txt</div>
+    <div class="cmd" style="padding-top:0">cp .env.example .env<span style="color:var(--term-dim)"># 填自己的 LLM_API_KEY</span></div>
+    <div class="cmd" style="padding-top:0">./daemon.sh start</div>
+    <pre><s>已启动：http://127.0.0.1:7788  (pid 98390)</s></pre>
+  </div>
+  <p>依赖只有 numpy 和 httpx，本机不跑模型、不下权重。<b>用哪家模型都行</b>——OpenAI、通义、智谱、硅基流动、本地 Ollama，改 <code>.env</code> 里三行就能换，向量化那边 OpenAI 兼容协议和 MiniMax 私有协议都认。没配 key 也能开，检索会退成纯字面匹配。<b>先搜几个问题玩十分钟再听课</b>——手上有感觉，后面每一站你才知道我在说哪儿。</p>
+</div>
+
+<div class="track">
+
+<section class="stop" data-n="1">
+  <h2>文章进来：决定什么算语料</h2>
+  <div class="when">8 分钟 · scripts/ingest.py</div>
+  <p>660 篇文章和漫画进索引之前，先要回答一个不技术的问题：<b>哪些算数</b>。这套系统的答案是「已发布的才算」，判据是有没有公众号链接。没链接的一律不进，包括写完没发的存稿。</p>
+  <p>这条规矩把 34 篇挡在外面。听起来只是个过滤条件，但它决定了系统会不会说谎：一个没发表过的观点，被检索出来当成「我写过」，比检索不到糟糕得多。</p>
+
+  <div class="crash">
+    <span class="tag">翻车现场 · 内部内容漏出去</span>
+    <p>第一版索引建完，随手点开一篇的「展开全文」，冒出来这么一行：</p>
+    <pre style="background:var(--ground);border:1px solid var(--line);border-radius:4px;padding:10px 13px;font-family:var(--mono);font-size:12px;overflow-x:auto;margin:10px 0">&gt; 2026-08-17 增长改版：原标题是索取姿态 + 格言体，
+&gt; 已发布版本保留备查。本次只动引导语，正文不动。</pre>
+    <p>这是写稿时给自己留的编辑说明，读者从来没见过。同一批还有「发文前需人工确认的事实点」19 篇、「作者置顶评论（自己先抛，引互动）」19 篇、灌稿命令和后台文章 id。</p>
+    <p><b>清洗按小节层级做，不能逐行判。</b>逐行判会把说明段切碎，留下半句「原标题是索取姿态」这种更难看的残渣。丢一个小节就丢到下一个同级标题为止。</p>
+  </div>
+
+  <p>切块这里有个容易含糊过去的选择：按固定字数切，还是按小标题切。这套按小标题切，平均 357 字一块。一个小节通常就是一个完整意思，定长切法会把一句话劈成两半，两边都答不了问题。</p>
+</section>
+
+<section class="stop" data-n="2">
+  <h2>向量化：本机跑还是调接口</h2>
+  <div class="when">10 分钟 · scripts/embedding.py</div>
+  <p>3968 块要变成向量。第一版用本机模型 <code>bge-base-zh-v1.5</code>，768 维，Mac 上 48 秒跑完，不联网不花钱，听起来哪儿都好。</p>
+
+  <div class="crash">
+    <span class="tag">翻车现场 · 你们装不上</span>
+    <p>本机跑模型要 <code>pip install torch</code>，2GB；模型权重另外 391MB。我这儿早装好了所以没感觉，直到要把包发给你们。网速好也得十几分钟。「课前几分钟搭好」当场变成空话。</p>
+    <p>换成调接口后依赖只剩 numpy 和 httpx，pip 装完 31 秒，全库 3968 块编码 91 秒。今天演示用的是 MiniMax 的 <code>embo-01</code>，换成别家只改 <code>.env</code>，代码一行不动。</p>
+    <p>教训在别处：<b>「在我机器上能跑」和「别人能装上」是两件事</b>，后者往往才是技术选型里真卡人的那一条。</p>
+  </div>
+
+  <p>torch 是跑神经网络的运行时，不是可选的加速库。bge 是 BERT 结构，把一句话变成 768 个数要过 12 层 Transformer，几千万次矩阵运算，这些算子得有人实现。2GB 是因为它把 CPU 版、CUDA 版、MPS 版的内核全预编译进去了，你只用得上一份。</p>
+  <p>换接口之后，那几千万次运算发生在人家机器上，本机收到的是算好的 1536 个数，剩下只有一次点积，numpy 就够。<b>本机跑模型和调接口的真正分界，在于前向计算发生在谁的机器上</b>，跟联不联网没关系。</p>
+  <p class="say"><b>换向量模型必须重建索引</b>（<code>./refresh.sh</code>）：维度和向量空间都变了，不重建的话查询跟库里的向量根本不在一个空间，检索会安静地全乱、不报错。服务启动时会核对索引里记的模型，对不上直接在日志里说。<br><br><b>还有个坑：</b>MiniMax 的 embedding 是非对称的，入库传 <code>type=db</code>，查询传 <code>type=query</code>，混用会掉精度。bge 则要求查询侧加固定前缀。这类要求写在各家文档里，不看就白跑一遍。</p>
+</section>
+
+<section class="stop" data-n="3">
+  <h2>两路检索：语义一路，字面一路</h2>
+  <div class="when">18 分钟 · scripts/server.py 的 Searcher</div>
+  <p>现在的向量模型已经很强了，强到你会怀疑还要不要 BM25。先看一个分数——</p>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 两路 "省 token"</div>
+<pre>配置                   分数 判定      检索到的第一篇
+──────────────────────────────────────────────────────
+混合检索               1.05 写过      <b>《求求你别上班了…省token背后的技术》</b>
+只用向量               1.00 写过      <i>《JWT鉴权体系》</i>
+只用字面 BM25          0.83 写过      《一句十四个字的话，烧掉我半天额度》</pre>
+    <div class="note"><b>分数只差 0.05，第一名换了一篇。</b>向量把「token」理解成了鉴权令牌——一词多义是语义模型天生的软肋。</div>
+  </div>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 两路 "维果斯基"</div>
+<pre>混合检索               0.32 擦边      <b>《漫画：儿童心理学系列 ⑤ · 我讲了三遍你还不会》</b>
+只用向量               0.31 擦边      <i>《小白也能看懂的 Palantir 本体论》</i>
+只用字面 BM25          0.79 擦边      《漫画：儿童心理学系列 ⑤ · 我讲了三遍你还不会》</pre>
+    <div class="note">分数几乎一样（0.32 对 0.31），一个是儿童心理学漫画，一个是数据本体论。<b>人名在向量空间里飘走了，字面路一击即中。</b></div>
+  </div>
+
+  <p>我扫了 30 个查询，纯向量在 <b>7 个</b>上选错了第一名，全是这两类：一词多义（token、缓存、锁）和专有名词（人名、书名、缩写）。而这 7 个的分数跟混合检索只差 ±0.1——<b>光看分数根本看不出问题，得看排序。</b></p>
+
+  <div class="crash">
+    <span class="tag">翻车现场 · 我差点删掉 BM25</span>
+    <p>换成 MiniMax 之后我一度想删掉字面这一路：分数差距那么小，四十行代码不如省了。</p>
+    <p>幸好先扫了一遍排序，才看见那 7 个跑偏的第一名。<b>如果只盯着分数做决策，这一路就删了，然后在某个学员搜「省 token」的时候安静地给出一篇讲 JWT 的文章。</b></p>
+  </div>
+
+  <p>字面这一路是自己写的 BM25，k1=1.5、b=0.75，中文按 2-gram 切词省掉分词器依赖。还有个细节：<b>建 BM25 索引时把标题并进了每一块</b>，否则「杀猪盘」这种只出现在标题里的词，正文一次都不出现，字面路也命中不了。</p>
+</section>
+
+<section class="stop" data-n="4">
+  <h2>融合：两个分数怎么合成一个</h2>
+  <div class="when">12 分钟</div>
+  <p>加权和，语义 0.72、字面 0.28。合之前要把 BM25 归一化——它没有上界，跟余弦不在一个量级。第一版写的是「除以本次查询的最大值」，看着很自然。</p>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 归一化 "钢琴考级怎么准备"</div>
+<pre>BM25 归一化方式          分数 判定      第一篇
+────────────────────────────────────────────────────────
+饱和 lex/(lex+12)  现在  0.27 <b>没写过</b>   《意识型面试题：我们更换了证书…》
+除以本次最大值    旧写法    0.42 <i>擦边</i>    《朋友两年没上班，在准备移民德国》</pre>
+    <div class="note">她没写过钢琴考级。旧写法把分数抬到 0.42，结论从「没写过」变成「擦边」，<b>系统开始暗示一篇根本不相干的文章。</b></div>
+  </div>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 归一化 "怎么挑西瓜"</div>
+<pre>饱和 lex/(lex+12)  现在  0.23 <b>没写过</b>   《CURD系统怎么做出技术含量…》
+除以本次最大值    旧写法    0.32 <i>擦边</i>    《白话 TCP/IP 原理》</pre>
+    <div class="note">同一个毛病。<b>「除以本次最大值」意味着每次搜索都必然有一块拿到接近满分</b>，哪怕全库没有相关内容，分母是本次查询自己的最高分。</div>
+  </div>
+
+  <p>改成饱和归一化 <code>lex / (lex + 12)</code>，分数才有绝对含义：命中得多、命中的词罕见，分才高。这个问题根源藏得很深，因为它不影响排序，只影响分数的量级——而「写过没写过」这个判断，恰恰只看量级。</p>
+
+  <p>另外两个文档级加分项：一篇里多处命中，每处 +0.035（封顶 3 处）；查询词跟标题重叠，按比例最多 +0.18。块级分数聚合到文章时取<b>最高块</b>，不求和——求和会让长文虚高：一篇一万字的文章顺带提八次，加起来能压过专门写它的短文。</p>
+</section>
+
+<section class="stop" data-n="5">
+  <h2>片段：给人看的那几行</h2>
+  <div class="when">5 分钟</div>
+  <p>检索到的是块，呈现给人的得是「能读懂的一段」。三个细节决定它像不像人做的。</p>
+  <p>截取<b>从命中词附近开始</b>，然后往前找最近的句号，避免从半句话中间起。markdown 记号在展示前抹掉，正文里的互链只留标题不留网址。高亮要过滤停用词——两个字都是虚词的 2-gram 全高亮，满屏是黄的。</p>
+  <p>这一站没有翻车故事，但它是做完 demo 之后最容易被夸的地方。检索质量看不见，片段读着顺不顺，一眼就看得出来。</p>
+</section>
+
+<section class="stop" data-n="6">
+  <h2>判断：这个观点到底写过没有</h2>
+  <div class="when">25 分钟 · 全课的重点</div>
+  <p>前面五站都在排序。但这套系统真正要回答的是个是非题：<b>这个观点我以前写过吗</b>。排第一的那篇分数 0.9，到底算写过还是没写过？</p>
+  <p>方法是准备两组问题，各自去搜，看两组分数区间隔不隔得开。中间那段空隙就是<b>分离度</b>——它是留给阈值的空间，空间越大这条线越不容易划错。</p>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 分离度</div>
+<pre>【确定写过】10 个
+  检索分数  0.89 ~ 1.14      标题匹配  0.85 ~ 1.00
+  判定分布  <b>写过×10</b>
+
+【完全没写过】5 个
+  检索分数  0.23 ~ 0.29      标题匹配  0.03 ~ 0.25
+  判定分布  <b>没写过×5</b>
+
+【难负例·沾边但没专门写】3 个
+  检索分数  <i>0.86 ~ 0.99</i>      标题匹配  <b>0.24 ~ 0.67</b>
+  判定分布  <b>擦边×3</b></pre>
+    <div class="note">看第三组。<b>它的检索分数 0.86~0.99，跟「确定写过」那组完全重叠</b>——光靠分数，这三个必然被判成「写过」。救回来的是标题匹配那一列。</div>
+  </div>
+
+  <div class="crash">
+    <span class="tag">翻车现场 · 我的评估集里没有难题</span>
+    <p>标定阈值时我用的负例是羽绒服、猫藓、插花、螺蛳粉——跟她的领域八竿子打不着。这种负例谁都能分对。</p>
+    <p>后来补了三个<b>难负例</b>：Redis 缓存穿透、MySQL 索引失效、线程死锁。都在她的技术领域内，她也确实在《面试题总结》里顺带提过一两句，但没有一篇专门写。这才是真实使用中最常问、也最容易判错的那一类。</p>
+    <p>用难负例一测，原来那套判错 3 个。<b>分离度 +0.034 的方案，实际判错率是 +0.002 那个方案的三倍。</b>不是指标错了，是我喂给指标的测试集里没有难题。</p>
+  </div>
+
+  <p>诊断了三条路：向量分（难负例 0.93~0.95，跟正例 0.96~0.99 贴着，救不了）、块分数分布（婆媳 0.81 = Redis 缓存穿透 0.81，分不开）、命中块数（Redis 缓存穿透在《面试题总结》里命中 19 块，反而最多）。<b>只有标题分得开。</b></p>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 判定 "Redis 缓存穿透"</div>
+<pre>  第一名        《面试题总结》
+  检索分数      0.99   <b>≥ 0.60 ✓</b>
+  标题匹配      0.24   <i>&lt; 0.70 ✗ 没有一篇标题在讲这个</i>
+  命中块数      19
+
+  结论          <b>擦边</b>
+  （只看分数不看标题的话会判成「写过」——标题这一条就是拦这个的）</pre>
+    <div class="note">《面试题总结》是个大杂烩，什么都提一句，所以命中 19 块、分数 0.99。但标题跟问题毫无关系。<b>「专门写过」和「顺带提过一句」的区别，就藏在标题里。</b></div>
+  </div>
+
+  <p>标题匹配取两个信号的<b>最大值</b>，因为两条各有各的盲区：</p>
+  <div class="scroll"><table class="data">
+    <tr><th>查询</th><th>库里的标题</th><th>字面重叠</th><th>标题语义</th><th>取大</th></tr>
+    <tr><td>婆媳关系怎么处</td><td>我的婆媳相处之道</td><td class="n">0.17</td><td class="n">0.95</td><td class="n">0.95</td></tr>
+    <tr><td>熔断的原理</td><td>稳定性五件套-熔断的原理和实现</td><td class="n">1.00</td><td class="n">0.34</td><td class="n">1.00</td></tr>
+    <tr><td>Redis 缓存穿透</td><td>面试题总结</td><td class="n">0.00</td><td class="n">0.24</td><td class="n">0.24</td></tr>
+  </table></div>
+  <p>「熔断的原理」的标题语义只有 0.34，是被系列前缀「稳定性五件套-」稀释的。编码标题前把这类前缀剥掉，它就升到 1.00 了。</p>
+
+  <p>最后「写过」这个结论要两个条件同时成立：<b>分数 ≥ 0.60，且标题匹配 ≥ 0.70</b>。标题不混进分数，单独当一道闸：分数管「相关不相关」，标题管「有没有一篇专门写它」。</p>
+
+  <div class="run">
+    <div class="cmd">.venv/bin/python scripts/demo.py 留一</div>
+<pre>问题                     真值    分数   标题  判定
+──────────────────────────────────────────────────
+Kubernetes 污点和容忍     写过   1.14  0.98  写过
+怎么写好绩效总结           写过   1.08  1.00  写过
+婆媳关系怎么处            写过   1.00  0.95  写过
+<i>Redis 缓存穿透          没写过  0.99  0.24  擦边</i>
+熔断的原理              写过   0.99  1.00  写过
+<i>MySQL 索引什么时候失效    没写过  0.97  0.66  擦边</i>
+<i>线程死锁怎么排查         没写过  0.86  0.67  擦边</i>
+…（共 21 个）
+
+<b>判错 0/21</b></pre>
+    <div class="note">21 个<b>没参与过阈值标定</b>的新问题，真值用全文精确匹配定的，不靠检索系统自己判——那是循环论证。加上原来的 32 个，两个集合共 53 个查询，硬错 0。</div>
+  </div>
+
+  <p class="say"><b>课堂提问：</b>分离度高，是不是就说明检索做得好？<br>不是。分离度只管「有没有」这个是非题，不管「哪篇最相关」。第三站那些跑偏的第一名，分数一个都没异常。<b>两件事要分开测，别用一个指标糊弄自己。</b></p>
+</section>
+
+<section class="stop" data-n="7">
+  <h2>生成：让它用我的话回答，还得说出处</h2>
+  <div class="when">10 分钟 · scripts/answer.py</div>
+  <p>到这一步才轮到大模型出场。前面六站做的事，就是给它一份「只包含我说过的话」的材料。提示词里最重要的一条：<b>片段里没有的一个字都别加，包括你自己知道的正确答案</b>。</p>
+
+  <div class="run">
+    <div class="cmd">curl -sN "localhost:7788/api/ask?q=怎么挑选羽绒服"</div>
+<pre>  事件 sources     首条 0.29
+  事件 <b>no_answer</b>   <s>← 根本没调模型</s></pre>
+    <div class="note">检索最高分低于 0.30 时<b>连模型都不调</b>，直接回「这个我没正面写过」。省钱是次要的，主要是断掉硬编的机会。材料不够时，模型会把缺口自己填上。</div>
+  </div>
+
+  <div class="crash">
+    <span class="tag">翻车现场 · 角标全丢了</span>
+    <p>提示词里明明白白要求「每段末尾标 [编号]」，读者要靠它点回原文核对。实测三次里有一次一个角标都不带，答案照样写得很漂亮。</p>
+    <p>把要求从 system 挪到 user 消息末尾（紧挨生成位置），稳定了一些，但没有全好。</p>
+    <p>调提示词到此为止，解法挪到<b>前端兜底</b>——不管模型带不带角标，答案下方固定列出这次用到的文章，带链接。可溯源是 RAG 的命门，不能指望模型自觉。</p>
+  </div>
+
+  <p>这就是 RAG 里 G 那一步的真相：模型负责组织语言，<b>事实和出处由工程保证</b>。你在提示词里写多少遍「不要编造」，都不如让它根本拿不到可编造的材料。</p>
+</section>
+
+<section class="stop" data-n="8">
+  <h2>要不要上编排框架</h2>
+  <div class="when">7 分钟</div>
+  <p>课上一定有人问 LangGraph。先看这套系统跑一次搜索的形状：编码查询 → 两路检索 → 融合 → 聚合 → 判定 →（分够高才）生成。<b>一条直线，没有分支、循环、跨步骤状态，也没有中断恢复。</b>全部逻辑 400 行 Python。</p>
+  <p>LangGraph 解决的是有向图里的编排问题——ReAct 循环、多 agent 协作、条件跳转、检查点续跑、人工介入节点。这套一条都不占。硬套上去，依赖从 2 个变十几个，27 秒的安装泡汤，400 行直白代码变成节点定义加状态类型加图编译，学员得先学框架才读得懂检索逻辑。</p>
+  <p>什么时候真有意义：检索分低时让模型改写问题再搜一遍（真循环，还得设退出条件）、多轮澄清、检索和生成之间插人工审核。到那一步框架给的是可观测性和状态持久化，在此之前一个 while 加几个 if 更清楚。</p>
+  <p class="say"><b>顺带说一个融合方式的对照。</b>不少工单诊断类系统用 RRF 倒数排名融合（<code>score = Σ 1/(k + rank)</code>），好处是根本不用管两路分数的量纲，省掉归一化那一整块麻烦。代价是它输出的分数<b>只有相对含义</b>——第 1 名比第 2 名高多少，跟「这件事到底处理过没有」没关系。第四站那个问题根源，RRF 是结构性地一直有。</p>
+</section>
+
+</div>
+
+<div class="takeaway">
+  <h2>今天带走这六条</h2>
+  <div class="tk">
+    <div><span class="i">01</span><span><b>RAG 的功夫八成在 G 之前。</b>调模型是最后十分钟的事，前面七站决定了它手上有什么材料。</span></div>
+    <div><span class="i">02</span><span><b>光看分数会漏掉排序问题。</b>纯向量在 7 个查询上选错第一名，分数只差 ±0.1。一词多义和专有名词是它的固定盲区。</span></div>
+    <div><span class="i">03</span><span><b>分数要有绝对含义。</b>「除以本次最大值」这类相对归一化，会让没写过的话题也拿到高分，阈值就此失效。</span></div>
+    <div><span class="i">04</span><span><b>评估集里必须有难负例。</b>领域内、沾过边、模型最容易混的那些。全是远距离负例的评估，分数好看但跟真实使用没关系。</span></div>
+    <div><span class="i">05</span><span><b>是非题需要第二个信号。</b>「相关」和「专门写过」是两回事，分数管前者，标题管后者。一个信号扛不住两个问题。</span></div>
+    <div><span class="i">06</span><span><b>可溯源靠工程，不靠模型自觉。</b>模型会漏角标、会补全、会自信地编。兜底代码写在它够不着的地方。</span></div>
+  </div>
+</div>
+
+<div class="takeaway" style="border-top-width:1px;margin-top:36px">
+  <h2 style="font-size:19px">课后练习</h2>
+  <div class="tk">
+    <div><span class="i">A</span><span>跑 <code>demo.py 两路</code> 试十个自己的问题，找出第三个纯向量选错第一名的案例。</span></div>
+    <div><span class="i">B</span><span>自己准备 10 个「确定写过」+ 10 个「确定没写过」的问题，其中至少 3 个是难负例，跑一遍留一验证。</span></div>
+    <div><span class="i">C</span><span>把 <code>server.py</code> 里的 <code>TITLE_MATCH_GATE</code> 调到 0.5 和 0.9，各跑一次 <code>demo.py 留一</code>，看判错数怎么变。</span></div>
+  </div>
+</div>
+
+<div class="foot">
+  课件里每个分数都是当场跑出来的，命令都在上面，你们手上那套能复现。<br>
+  语料 660 篇已发布文章 · 3968 个检索块 · 本次演示的向量与生成都走 MiniMax，换别家改 .env 三行即可
+</div>
+
+</div>

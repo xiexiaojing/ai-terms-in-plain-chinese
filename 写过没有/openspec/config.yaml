@@ -1,0 +1,39 @@
+schema: spec-driven
+
+context: |
+  本机私活：公众号文章语义检索（「写过没有」）。不进公司 git，不占 REQ 号。
+  用法与数据来源见 README.md，那是唯一真相。
+  数据是只读引用 wechat-article/ 与 feishu-claude-bot/data/，本仓不改它们一个字。
+  平凡改动（调权重、改文案、修样式）直接做；改语料来源、换嵌入模型、改链接匹配判据
+  这类会影响检索结果可信度的，才走 changes/ 提案。
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

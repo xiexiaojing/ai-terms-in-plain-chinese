@@ -1,0 +1,9 @@
+# 全部依赖就这两个。向量化和生成都走 MiniMax 接口，本机不跑模型，
+# 所以不需要 torch（2GB）也不需要下载模型权重（391MB）。
+numpy>=1.26
+httpx>=0.27
+
+# 想让检索完全离线、不调接口，再装下面两个，然后
+#   EMBEDDING_BACKEND=bge ./refresh.sh
+# sentence-transformers>=3.0
+# torch>=2.2
