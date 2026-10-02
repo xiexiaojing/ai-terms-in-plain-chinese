@@ -1,0 +1,27 @@
+{
+ "user": "把 web/index.html 里“按时间”那个按钮的文字改成“按日期”。",
+ "steps": [
+  {
+   "kind": "Bash",
+   "n": "第 1 步",
+   "arg": "grep 找到“按时间”在第 243 行"
+  },
+  {
+   "kind": "Read",
+   "n": "第 2 步",
+   "arg": "web/index.html 第 243 行"
+  },
+  {
+   "kind": "Edit",
+   "n": "第 3 步",
+   "arg": "web/index.html",
+   "result": "钩子拦下：web/index.html 是共用页面，改它要先由人确认。停下来，把你打算改的那一行原样列给我，等我点头。",
+   "fail": true
+  }
+ ],
+ "texts": [
+  [
+   "钩子拦下了这次修改——web/index.html 是共用页面，改它需要你先确认。  我打算改的那一行（第 243 行）：  <button class=\"chip\" data-order=\"date\" aria-pressed=\"false\">按时间</button>   改成：  h……"
+  ]
+ ]
+}

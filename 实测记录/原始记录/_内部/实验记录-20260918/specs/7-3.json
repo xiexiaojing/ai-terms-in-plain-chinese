@@ -1,0 +1,39 @@
+{
+ "user": "给“我的文件”那种卡片加一个标签，显示这份文件一共多少字。改完自己检查一遍语法，不用重启服务。",
+ "steps": [
+  {
+   "kind": "Bash",
+   "n": "第 1 步",
+   "arg": "ls -la && git log --oneline -5",
+   "result": "total 128 drwxr-xr-x@ 24 xiexiaojing  wheel …"
+  },
+  {
+   "kind": "Bash",
+   "n": "第 2 步",
+   "arg": "find web -type f | head -50 && echo \"---我的文件---\" && ls -la 我…",
+   "result": "web/index.html web/gate.html web/lab.html --…"
+  },
+  {
+   "gap": 18
+  },
+  {
+   "kind": "Bash",
+   "n": "第 21 步",
+   "arg": "python3 -m py_compile scripts/server.py",
+   "result": "被拦：要人授权",
+   "fail": true
+  },
+  {
+   "kind": "Read",
+   "n": "第 22 步",
+   "arg": "web/index.html",
+   "result": "522\t  const tags = []; 523\t  if (r.date) tag…"
+  }
+ ],
+ "texts": [
+  [
+   "改动完成，两处：后端给“我的文件”加了 word_count 字段，前端在标签里显示“N 字”。",
+   "语法检查命令被沙箱拦下没能跑成，改为逐行审读，未见问题。"
+  ]
+ ]
+}

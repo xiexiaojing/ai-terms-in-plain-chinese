@@ -1,0 +1,102 @@
+历史记录找回索引
+找回日期：2026-10-02
+保留165份历史原文件，逐件SHA256核对。包含逐次返回、截图、结果汇总和当时说明；汇总文件仍是汇总，不改称完整请求日志。
+不从目录名、文件名和修改时间补造调用日期、模型路由或设置。只有文件实际记录的字段可以确认。
+未收录含账户密钥的旧运行脚本，也未重新运行旧模型请求。
+按节号查看案例索引.json中的“找回的历史记录”；没有明确对应的文件保留原目录，在原始记录清单.json查找。
+
+1.2 动手做：AI 工具哪家强？
+  原始记录/_内部/_素材/PPT四页原图-bw.png
+  原始记录/_内部/_素材/PPT四页原图.png
+  原始记录/_内部/实验记录-20260928/1.2-DeepSeek-带标题.md
+2.2 动手做：你的模型有自知之明吗？
+  原始记录/_内部/实验记录-20260922/ch2/count_chars.json
+  原始记录/_内部/实验记录-20260922/ch2/self_spec.json
+  原始记录/_内部/实验记录-20260922/ch2/confirm.json
+2.5 流式输出 streaming：边生成边显示，不等全部写完
+  原始记录/_内部/实验记录-20260922/ch2/needle.json
+2.10 对齐 alignment：让 AI 和人的意图、价值观保持一致
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/T1.png
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/DeepSeek-两轮-关搜索.md
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/on-T2.png
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/on-T1.png
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/首字延迟对照.md
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/DeepSeek-两轮-开搜索-截图那跑.md
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/第1跑-开搜索/T1-问规律.md
+  原始记录/配套资源包/制作中/2.11-AI销售-20260917/第1跑-开搜索/T2-喂文档要发信.md
+3.5 非确定性 non-determinism：输出未必相同
+  原始记录/配套资源包/制作中/3.5-幸运数字-20260917/DeepSeek-截图整页-72.png
+  原始记录/配套资源包/制作中/3.5-幸运数字-20260917/DeepSeek-同一句问三遍.md
+  原始记录/配套资源包/制作中/3.5-幸运数字-20260917/千问-同一句问三遍.md
+3.8 推理模式 reasoning mode：让模型先推理，再作答
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-on-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-off-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-on-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-on-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-on-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-off-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-off-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-on-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-on-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/qs.json
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-on-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-off-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-off-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-off-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q3-on-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-on-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-off-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-off-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-on-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-on-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-off-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-on-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-off-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-off-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/t-on.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q4-off-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-off-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-off-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q2-on-2.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-on-1.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/t-off.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q5-on-3.jsonl
+  原始记录/_内部/实验记录-20260918/ch3think/r-sonnet-q1-off-2.jsonl
+4.2 动手做：没了资料，它还靠得住吗？
+  原始记录/_内部/实验记录-20260922/ch8/models_say_no.json
+  原始记录/_内部/实验记录-20260922/ch8/two_models.json
+  原始记录/_内部/实验记录-20260922/ch8/false_accusation.json
+  原始记录/_内部/实验记录-20260922/ch8/no_doc.json
+8.2 动手做：你的产品打几分？
+  原始记录/_内部/实验记录-20260922/ch8b/self_grade.json
+8.3 评测 evaluation：按标准检查实际表现
+  原始记录/_内部/实验记录-20260918/ch8/baseline_nodoc.json
+  原始记录/_内部/实验记录-20260918/ch8/evalset.json
+  原始记录/_内部/实验记录-20260918/ch8/eval_runs.json
+8.4 裁判模型 LLM-as-a-judge：用模型按标准评判结果
+  原始记录/_内部/实验记录-20260918/ch8/judge_runs.json
+  原始记录/_内部/实验记录-20260922/ch8/two_models.json
+  原始记录/_内部/实验记录-20260922/ch8/false_accusation.json
+10.3 上下文压缩 context compression：缩短后再送进模型
+  原始记录/_内部/实验记录-20260918/ch10/trim_runs.json
+  原始记录/_内部/实验记录-20260918/ch10/compress/c3.jsonl
+  原始记录/_内部/实验记录-20260918/ch10/compress/c1.jsonl
+  原始记录/_内部/实验记录-20260918/ch10/compress/compress_prompt.txt
+  原始记录/_内部/实验记录-20260918/ch10/compress/c2.jsonl
+10.6 档位 model tier：按任务比较不同型号与服务档位
+  原始记录/_内部/实验记录-20260918/ch10/tiers_json.json
+10.7 推理强度 reasoning effort：控制模型投入多少推理工作
+  原始记录/_内部/实验记录-20260918/ch10/effort.txt
+10.8 切换代价 switching cost：换模型也有额外成本
+  原始记录/_内部/实验记录-20260918/ch10/switch.txt
+11.5 结构化输出 structured output：按固定格式返回结果
+  原始记录/_内部/实验记录-20260918/ch10/json2.json
+11.10 护栏 guardrail：拦住模型不该做的那些事
+  原始记录/_内部/实验记录-20260918/ch11/r-hook.jsonl
+  原始记录/_内部/实验记录-20260918/ch11/r-deny.jsonl
+11.11 人在回路 human in the loop：关键步骤由人确认
+  原始记录/_内部/实验记录-20260918/ch11/r-mode-bypassPermissions.jsonl
+  原始记录/_内部/实验记录-20260918/ch11/r-mode-acceptEdits.jsonl
+  原始记录/_内部/实验记录-20260918/ch11/r-mode-default.jsonl
+13.5 子 Agent sub-agent：由主 Agent 分派任务的 Agent
+  原始记录/_内部/实验记录-20260918/ch13/r-sub.jsonl

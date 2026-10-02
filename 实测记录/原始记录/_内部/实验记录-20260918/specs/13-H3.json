@@ -1,0 +1,22 @@
+{
+ "user": "派两个子 Agent 分头干：一个只看 scripts/server.py，一个只看 web/index.html，各自找出给用户看的文案里的中文冒号有几处、在哪几行，不要改文件。两个都回来后你汇总成一张表给我。",
+ "steps": [
+  {
+   "kind": "Skill",
+   "n": "派出 1",
+   "label": "子 Agent",
+   "arg": "查 server.py 中文冒号：只看 scripts/server.py"
+  },
+  {
+   "kind": "Skill",
+   "n": "派出 2",
+   "label": "子 Agent",
+   "arg": "查 index.html 中文冒号：只看 web/index.html"
+  }
+ ],
+ "texts": [
+  [
+   "两个子 Agent 都回来了。汇总如下（注意 index.html 那个 Agent 表里列了 8 处却写成\"7处\"，我按实际列举的条目算，是 **8 处**）。  ## 用户可见文案里的中文冒号「：」  ### scripts/server.py —— 2 处  | 行号 | 内容片段 | 场景 | |------|---------|------| | 454 | `图谱还没建，跑 scrip……"
+  ]
+ ]
+}

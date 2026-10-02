@@ -1,0 +1,34 @@
+{
+ "filecard": {
+  "name": "logs/server.log（原样两行）",
+  "lines": [
+   "\"GET /api/ask?q=%E5%B9%B4%E5%81%87…&kind=file HTTP/1.1\" 200 -",
+   "\"GET /api/search?q=MQTT&kind=all&limit=1 HTTP/1.1\" 200 -"
+  ]
+ },
+ "table": {
+  "head": [
+   "有",
+   "没有"
+  ],
+  "rows": [
+   [
+    "问了什么（编码过的）",
+    "什么时候问的"
+   ],
+   [
+    "走的是问一句还是只搜",
+    "它答了什么"
+   ],
+   [
+    "成功还是失败（200）",
+    "捞出来的是哪几段"
+   ],
+   [
+    "",
+    "花了多少 token、几秒"
+   ]
+  ]
+ },
+ "small": true
+}

@@ -1,0 +1,8 @@
+{
+ "filecard": {
+  "name": "主 Agent 派子 Agent 甲时给它的话（原样）",
+  "lines": [
+   "只看文件 scripts/server.py（相对当前工作目录 /tmp/agent-demo/demo-sub）。\n\n任务：找出这个文件里「给用户看的文案」中出现的中文冒号「：」（……"
+  ]
+ }
+}
