@@ -9,4 +9,4 @@ https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop
 3. Anthropic：How we contain Claude across products
 https://www.anthropic.com/engineering/how-we-contain-claude
 用于核对：重复确认的注意力问题、人工判断需要相应知识；人工监督与环境隔离分工。
-写作处理：使用漫画发布的教学示例串联流程，不把示例写成新实测；撤掉无测量依据的注意力曲线和仅展示预览的正文面板。保留dry run简短解释，避免与索引脱节。
+写作处理：使用作者2026-10-03确认的现行漫画发布流程串联讲解；实际流程由作者确认，不虚构运行日志或新的测试结果；撤掉无测量依据的注意力曲线和仅展示预览的正文面板。保留dry run简短解释，避免与索引脱节。
