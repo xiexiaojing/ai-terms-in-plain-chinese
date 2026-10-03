@@ -1,0 +1,12 @@
+11.10人在回路重写参考资料
+查阅日期：2026-10-03
+1. LangChain：Human-in-the-loop
+https://docs.langchain.com/oss/python/langchain/human-in-the-loop
+用于核对：暂停工具执行；人批准、修改、拒绝或补充答复；收到决定后继续。
+2. Microsoft Agent Framework：Human-in-the-loop
+https://learn.microsoft.com/en-us/agent-framework/workflows/human-in-the-loop
+用于核对：流程暂停，发出输入请求，收到人的回应后恢复。
+3. Anthropic：How we contain Claude across products
+https://www.anthropic.com/engineering/how-we-contain-claude
+用于核对：重复确认的注意力问题、人工判断需要相应知识；人工监督与环境隔离分工。
+写作处理：使用漫画发布的教学示例串联流程，不把示例写成新实测；撤掉无测量依据的注意力曲线和仅展示预览的正文面板。保留dry run简短解释，避免与索引脱节。
