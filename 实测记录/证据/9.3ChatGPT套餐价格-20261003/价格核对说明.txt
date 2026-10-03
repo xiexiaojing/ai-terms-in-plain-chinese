@@ -1,0 +1,8 @@
+查询日期：2026年10月3日。个人套餐美元月价；Go的8美元为美国价格。
+免费版0美元，Go 8美元，Plus 20美元，Pro 100美元起，Pro三档为100、200、500美元/月。实际价格及额度以订阅页面为准。月费不是逐次对话费用；API另行计费。
+来源：
+https://chatgpt.com/pricing/
+https://openai.com/index/introducing-chatgpt-go/
+https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus
+https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers
+Pro官方说明查询时列出Pro100、Pro200、Pro500，作者截图只展示100美元起价。书稿采用四类套餐简表，在Pro一行列出另外两档，不复制大幅营销页面。

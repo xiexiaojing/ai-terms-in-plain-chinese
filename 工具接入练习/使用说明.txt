@@ -1,0 +1,14 @@
+Codex文件工具与故事简介技能（2026-10-03）
+1. 安装Codex与Node.js LTS，准备只放练习材料的AI练习文件夹，放入故事.txt。
+2. 在设置 / MCP servers / Add server中新增book-files，类型STDIO，命令npx（Windows通常为npx.cmd）。参数逐项填写：-y、@modelcontextprotocol/server-filesystem@2026.8.31、练习文件夹完整路径。保存后Restart，新开对话。
+3. 也可把对应系统的Codex-MCP配置模板合并进 ~/.codex/config.toml，只增加book-files，不覆盖其他服务。替换示例用户名和路径。模板env只为此服务选择公开npm源，不改全局npm设置。
+4. 命令行添加示例（路径须替换）：
+codex mcp add book-files --env npm_config_registry=https://registry.npmjs.org -- npx -y @modelcontextprotocol/server-filesystem@2026.8.31 "/Users/你的用户名/Desktop/AI练习"
+执行codex mcp list检查配置，再在该练习文件夹启动codex。Windows按模板使用自己的完整路径和npx.cmd。
+5. 新对话要求“通过book-files读取练习文件夹中的故事.txt，返回第一句话”。查看read_text_file调用是否成功、实际路径和返回原文。配置可见或已连接不代表已读取。
+6. 7.6基础练习先用简介制作说明.txt。测试真正的技能时，把story-summary目录复制到练习项目的.agents/skills/，即.agents/skills/story-summary/SKILL.md。新开Codex会话，只要求“给故事写一段发布简介，并保存到练习文件夹”，不指定技能名。检查读取SKILL.md、MCP读取、MCP写入与回读的记录。
+7. 写文件出现确认时核对路径再确认。本次自动测试只为授权练习目录的write_file单次运行设置审批方式；读者正常使用保持交互确认，不复制禁止审批的自动测试命令。
+8. 启动失败检查Node.js、命令路径、目录与npm下载；模型连接失败检查本机已有网络或代理设置。生成简介不等于成功保存，已有同名文件也不证明本次写入成功。
+9. 实跑证据见实跑记录/；首次失败、修改运行配置后成功分别保留。Windows模板经过TOML解析，未在Windows机器实跑。桌面点击与重启没有操作验证，不当作已实测。
+官方MCP说明：https://developers.openai.com/codex/mcp/
+官方技能说明：https://developers.openai.com/codex/skills/

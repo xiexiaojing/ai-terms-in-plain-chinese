@@ -1,0 +1,5 @@
+日期：2026-10-03，作者实际操作并提供原始截图与第二次请求JSON。平台：智谱开放平台体验中心 https://bigmodel.cn/trialcenter/modeltrial/text 。页面与请求模型均为GLM-4-Flash-250414。温度0.95，top_p0.7，max_tokens16384，stream=true。请求配置含web_search工具定义，未由现有截图与请求证明执行了联网搜索。
+第一问：2026年的生肖是什么？第二问：下一年呢。第二次prompt为3条消息，依次为第一问、第一次回答、第二问；此外含system_prompt与工具定义。
+页面两次显示消耗68、87tokens，不据此分类为输入token或输出token，未取得usage拆分或实际费用。
+截图中生肖答案错误，原图与原始请求未改。香港天文台2026年年历标示农历丙午肖马：https://www.hko.gov.hk/tc/gts/astron2026/files/HKO_almanac_2026.pdf 。本节用该实测确认请求历史，不把错误回答作为生肖知识。
+截图用于新图9-3；书中PNG仅打印重采样，未改原始内容。旧图9-3及复杂旧实测已归档。

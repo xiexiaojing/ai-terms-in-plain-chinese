@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a1011d-4da9-79e0-ba7d-9ebccade409d"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"版本\":\"v2\",\"简介\":[{\"id\":\"T1\",\"文字\":\"妹妹在自习室大喊，哥哥停下做题。爸爸一直在门外等，没有进屋。\"},{\"id\":\"T2\",\"文字\":\"搬办公室时，我的手机丢了。同事帮忙寻找，但当天没有找到。\"},{\"id\":\"T3\",\"文字\":\"放学时下雨，妈妈带伞来接孩子，两人一起回家。\"}]}"}}
+{"type":"turn.completed","usage":{"input_tokens":16413,"cached_input_tokens":13184,"cache_write_input_tokens":0,"output_tokens":100,"reasoning_output_tokens":0}}

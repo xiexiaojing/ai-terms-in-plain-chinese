@@ -1,0 +1,6 @@
+[mcp_servers.book-files]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", "/Users/你的用户名/Desktop/AI练习"]
+
+[mcp_servers.book-files.env]
+npm_config_registry = "https://registry.npmjs.org"

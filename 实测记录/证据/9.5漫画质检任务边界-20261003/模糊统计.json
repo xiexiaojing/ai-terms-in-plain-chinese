@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 130.14,
+  "type": "turn.completed",
+  "usage": {
+    "input_tokens": 34824,
+    "cached_input_tokens": 2432,
+    "output_tokens": 735,
+    "reasoning_output_tokens": 516
+  }
+}

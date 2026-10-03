@@ -1,0 +1,26 @@
+Reading additional input from stdin...
+2026-10-02T23:51:33.028047Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:51:34.294292Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:51:34.295583Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:51:34.313189Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-02T23:51:34.313554Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-02T23:51:34.313964Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-02T23:51:34.350654Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:51:49.373134Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:52:04.383562Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 215ms)...
+2026-10-02T23:52:19.607775Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (2/5 in 424ms)...
+2026-10-02T23:52:35.040319Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (3/5 in 744ms)...
+2026-10-02T23:52:50.793072Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (4/5 in 1.713s)...
+2026-10-02T23:53:07.513080Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (5/5 in 3.197s)...
+2026-10-02T23:53:25.717162Z  WARN codex_core::client: falling back to HTTP
+2026-10-02T23:53:28.156606Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:53:34.769354Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:53:36.899373Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:53:40.620582Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:53:43.229127Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:53:46.224198Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:53:48.550636Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:53:51.778032Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:53:53.604244Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5
+2026-10-02T23:53:57.500442Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-02T23:53:59.818230Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5

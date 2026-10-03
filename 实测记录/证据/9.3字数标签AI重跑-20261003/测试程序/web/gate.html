@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>要口令 · 书里的实测台</title>
+<style>
+:root{
+  --bg:#faf8f5; --surface:#fffdfb; --line:#e8e2d9;
+  --ink:#1d1a16; --ink-2:#5c554b; --ink-3:#938a7d;
+  --accent:#0f7264; --accent-soft:#e6f2ef;
+  --err:#b4342a;
+  --shadow:0 1px 2px rgba(29,26,22,.04),0 8px 24px -12px rgba(29,26,22,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#141210; --surface:#1c1a17; --line:#2c2823;
+    --ink:#f0ece5; --ink-2:#b3aca1; --ink-3:#7d766b;
+    --accent:#3fb8a3; --accent-soft:#16302c; --err:#e8796c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow);padding:34px 30px;max-width:420px;width:100%}
+h1{font-size:19px;margin:0 0 6px;font-weight:650}
+p{color:var(--ink-2);margin:0 0 20px;font-size:14px}
+.err{color:var(--err);margin:0 0 14px;font-size:14px}
+input{width:100%;padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;
+  background:var(--bg);color:var(--ink);font-size:16px;font-family:inherit;outline:0}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+button{width:100%;margin-top:12px;padding:13px;border:0;border-radius:11px;
+  background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;
+  font-family:inherit}
+button:hover{opacity:.92}
+.foot{margin:18px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.7}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>这里要一串口令</h1>
+  <p>《用人话讲 AI 名词》配套的实测台。口令在书的下载包里。</p>
+  <!--ERR-->
+  <form id="f">
+    <input id="k" type="text" autocomplete="off" autocapitalize="off" autocorrect="off"
+           autofocus placeholder="口令（中文，可以直接粘进来）">
+    <button type="submit">进去</button>
+  </form>
+  <p class="foot">进去一次就记住了，这台设备下次直接开。<br>
+    书里那些能上手的例子，这里都能自己跑一遍。</p>
+</div>
+<script>
+document.getElementById('f').addEventListener('submit', e => {
+  e.preventDefault();
+  const k = document.getElementById('k').value.trim();
+  if (!k) return;
+  const u = new URL(location.href);
+  u.searchParams.set('k', k);
+  location.href = u.toString();
+});
+</script>
+</body>
+</html>

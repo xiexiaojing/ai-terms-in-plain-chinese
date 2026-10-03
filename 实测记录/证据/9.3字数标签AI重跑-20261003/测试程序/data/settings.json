@@ -1,0 +1,41 @@
+{
+  "appearance": {
+    "theme": "auto",
+    "accent": "#419eff",
+    "radius": 8,
+    "density": "normal",
+    "font_size": 14,
+    "max_width": 860
+  },
+  "search": {
+    "limit": 20,
+    "second_snippet_ratio": 0.9,
+    "snippet_width": 260,
+    "verdict_yes": 0.6,
+    "verdict_maybe": 0.3,
+    "title_match_min": 0.7,
+    "highlight_cap": 6,
+    "fulltext_highlight_cap": 40
+  },
+  "features": {
+    "kind_article": true,
+    "kind_comic": true,
+    "kind_file": true,
+    "order_switch": true,
+    "answer": true,
+    "search_only_btn": true,
+    "examples": false,
+    "verdict": true,
+    "score_tag": true,
+    "hit_count_tag": true,
+    "thumbs": true,
+    "copy_actions": true,
+    "fulltext": true,
+    "gear": false,
+    "subtitle": false,
+    "hero": false,
+    "stats_line": false,
+    "foot_note": false,
+    "send_button": "arrow"
+  }
+}

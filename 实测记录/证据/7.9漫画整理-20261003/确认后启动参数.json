@@ -1,0 +1,13 @@
+[
+  "/opt/homebrew/bin/codex",
+  "exec",
+  "--ignore-user-config",
+  "--ephemeral",
+  "--skip-git-repo-check",
+  "--sandbox",
+  "workspace-write",
+  "-c",
+  "approval_policy=\"never\"",
+  "--json",
+  "已确认：“已完成作品”就是改名后的“旧漫画”，这3张图都是要整理的漫画。请继续在当前练习副本中新建“漫画”目录，把“已完成作品”里的3张图片复制进去，源文件保留。完成后逐一核对文件内容是否一致并报告结果。不得操作当前练习副本之外的目录。"
+]

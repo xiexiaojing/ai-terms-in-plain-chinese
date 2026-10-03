@@ -1,0 +1,40 @@
+2026-10-03T06:39:59.214957Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 140 column 5
+2026-10-03T06:40:00.145221Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.145715Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.167264Z  WARN codex_core_skills::loader: ignoring interface.icon_small: icon path with '..' must resolve under plugin assets/
+2026-10-03T06:40:00.167296Z  WARN codex_core_skills::loader: ignoring interface.icon_large: icon path with '..' must resolve under plugin assets/
+2026-10-03T06:40:00.171410Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.171682Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.177939Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-03T06:40:00.178302Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-03T06:40:00.178684Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-03T06:40:00.179026Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-10-03T06:40:00.334815Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.335087Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.335129Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.339512Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-03T06:40:00.341169Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.341908Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.341939Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.579500Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-03T06:40:00.580648Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-03T06:40:00.685254Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.685495Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.730973Z  WARN codex_core_skills::loader: ignoring interface.icon_small: icon path with '..' must resolve under plugin assets/
+2026-10-03T06:40:00.730995Z  WARN codex_core_skills::loader: ignoring interface.icon_large: icon path with '..' must resolve under plugin assets/
+2026-10-03T06:40:00.733512Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:00.733626Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.255388Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.255468Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.255512Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.257229Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/Users/xiexiaojing/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-03T06:40:15.257904Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.258554Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:15.258594Z  WARN codex_core_plugins::manifest: ignoring hooks: expected a string, string array, object, or object array; found object
+2026-10-03T06:40:30.289574Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 188ms)...
+2026-10-03T06:40:45.486135Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (2/5 in 365ms)...
+2026-10-03T06:41:00.858317Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (3/5 in 752ms)...
+2026-10-03T06:41:16.620074Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (4/5 in 1.654s)...
+2026-10-03T06:41:33.282417Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (5/5 in 3.013s)...
+2026-10-03T06:41:51.306204Z  WARN codex_core::client: falling back to HTTP
+2026-10-03T06:41:54.220605Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 140 column 5

@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>书里的实测台 · 用人话讲 AI 名词</title>
+<style>
+:root{
+  --bg:#faf8f5; --surface:#fffdfb; --line:#e8e2d9; --line-soft:#f0ebe3;
+  --ink:#1d1a16; --ink-2:#5c554b; --ink-3:#938a7d;
+  --accent:#0f7264; --accent-soft:#e6f2ef; --accent-ink:#0a5348;
+  --warn:#b45309; --warn-soft:#fef3e2;
+  --err:#b4342a; --err-soft:#fceeec;
+  --byte:#8b5cf6; --byte-soft:#f1ecfe;
+  --radius:14px; --shadow:0 1px 2px rgba(29,26,22,.04),0 8px 24px -12px rgba(29,26,22,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#141210; --surface:#1c1a17; --line:#2c2823; --line-soft:#242119;
+    --ink:#f0ece5; --ink-2:#b3aca1; --ink-3:#7d766b;
+    --accent:#3fb8a3; --accent-soft:#16302c; --accent-ink:#6ed7c3;
+    --warn:#e2a34a; --warn-soft:#2e2317;
+    --err:#e8796c; --err-soft:#33201d;
+    --byte:#b79cf7; --byte-soft:#251d3a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 90px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{padding:38px 0 14px}
+h1{font-size:22px;font-weight:650;margin:0 0 6px;letter-spacing:.2px}
+.sub{color:var(--ink-2);font-size:14px;margin:0}
+.sub b{color:var(--ink);font-weight:600}
+
+.banner{margin:16px 0 0;padding:12px 16px;border-radius:12px;font-size:13.5px;line-height:1.7;
+  border:1px solid var(--warn);background:var(--warn-soft);color:var(--ink)}
+.banner.ok{border-color:var(--line);background:var(--surface);color:var(--ink-2)}
+.banner b{color:var(--warn)}
+.banner.ok b{color:var(--accent)}
+
+nav{display:flex;gap:6px;margin:22px 0 20px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:0}
+nav button{border:0;background:none;font:inherit;font-size:14.5px;color:var(--ink-3);
+  padding:9px 14px;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1px}
+nav button:hover{color:var(--ink-2)}
+nav button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+nav button small{display:block;font-size:11px;color:var(--ink-3);font-weight:400;margin-top:-4px}
+
+.panel{display:none}
+.panel.on{display:block}
+.lede{color:var(--ink-2);font-size:14px;margin:0 0 18px;line-height:1.8}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;margin:0 0 16px;box-shadow:var(--shadow)}
+.card h3{font-size:15px;margin:0 0 4px;font-weight:620}
+.card .hint{color:var(--ink-3);font-size:13px;margin:0 0 14px;line-height:1.7}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;
+  padding:7px 13px;font-size:13px;cursor:pointer;color:var(--ink-2);font-family:inherit;
+  display:flex;align-items:center;gap:7px}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.chip .sec{font-size:11px;font-variant-numeric:tabular-nums;opacity:.75;
+  background:var(--bg);border-radius:5px;padding:1px 5px}
+.chip.on .sec{background:rgba(255,255,255,.55);color:var(--accent-ink)}
+@media (prefers-color-scheme:dark){.chip.on .sec{background:rgba(0,0,0,.3)}}
+
+label{display:block;font-size:13px;color:var(--ink-2);margin:0 0 5px;font-weight:500}
+textarea,input[type=text],input[type=number]{width:100%;border:1.5px solid var(--line);
+  border-radius:10px;background:var(--bg);color:var(--ink);padding:11px 13px;
+  font:inherit;font-size:14.5px;outline:0;resize:vertical}
+textarea:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0 0}
+.row > div{flex:1;min-width:110px}
+.knobs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:14px 0 0}
+.knob small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:3px;line-height:1.5}
+
+.go{margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button.run{border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;
+  font-size:14.5px;font-weight:600;padding:11px 22px;cursor:pointer}
+button.run:hover{opacity:.92}
+button.run:disabled{opacity:.45;cursor:default}
+button.ghost{border:1.5px solid var(--line);border-radius:10px;background:var(--surface);
+  color:var(--ink-2);font:inherit;font-size:14px;padding:10px 18px;cursor:pointer}
+button.ghost:hover{border-color:var(--accent);color:var(--ink)}
+.cost{color:var(--ink-3);font-size:12.5px}
+
+.groups{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.groups.two{grid-template-columns:1fr 1fr}}
+.group{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.group > h4{margin:0;padding:10px 14px;font-size:13px;font-weight:620;
+  background:var(--line-soft);border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+.group > h4 em{font-style:normal;font-weight:500;color:var(--ink-3);font-size:12px}
+.run{padding:11px 14px;border-bottom:1px dashed var(--line-soft);font-size:14px;
+  white-space:pre-wrap;word-break:break-word}
+.run:last-child{border-bottom:0}
+.run .meta{display:block;margin-top:6px;font-size:11.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+.run .cut{color:var(--err);font-weight:600}
+.verdict{margin:14px 0 0;padding:12px 15px;border-radius:11px;font-size:14px;line-height:1.75;
+  background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent)}
+.err{color:var(--err);background:var(--err-soft);border:1px solid var(--err);
+  border-radius:11px;padding:11px 15px;font-size:14px;margin:14px 0 0}
+.frombook{margin:14px 0 0;border:1px solid var(--warn);background:var(--warn-soft);
+  border-radius:11px;padding:13px 16px;font-size:13.5px;line-height:1.8}
+.frombook h4{margin:0 0 4px;font-size:14px;color:var(--warn)}
+
+/* 计时台 */
+.timing{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.timing{grid-template-columns:1fr 1fr}}
+.stream{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;
+  display:flex;flex-direction:column}
+.stream h4{margin:0;padding:10px 14px;font-size:13px;font-weight:620;background:var(--line-soft);
+  border-bottom:1px solid var(--line)}
+.stream .nums{display:flex;gap:16px;padding:10px 14px;border-bottom:1px solid var(--line-soft);
+  font-variant-numeric:tabular-nums}
+.stream .nums div{font-size:12px;color:var(--ink-3)}
+.stream .nums b{display:block;font-size:19px;color:var(--ink);font-weight:620;line-height:1.3}
+.stream .body{padding:12px 14px;font-size:13.5px;line-height:1.8;white-space:pre-wrap;
+  min-height:120px;max-height:320px;overflow:auto;word-break:break-word}
+.bar{height:8px;border-radius:99px;background:var(--line-soft);overflow:hidden;margin:0 14px 12px;display:flex}
+.bar i{display:block;height:100%}
+.bar .wait{background:var(--ink-3)}
+.bar .gen{background:var(--accent)}
+.legend{font-size:11.5px;color:var(--ink-3);padding:0 14px 12px;margin:0}
+
+/* 切法台 */
+.toks{display:flex;flex-wrap:wrap;gap:3px;margin:10px 0 0}
+.tok{border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:13.5px;
+  background:var(--bg);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.tok.part{background:var(--byte-soft);border-color:var(--byte);color:var(--byte);font-size:11px}
+.tok.sp{color:var(--ink-3)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0 0}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-soft)}
+th{color:var(--ink-3);font-weight:500;font-size:12.5px}
+td.n{font-variant-numeric:tabular-nums;text-align:right;width:90px}
+td.big{font-weight:650;color:var(--accent)}
+.blocks{margin:10px 0 0;display:flex;flex-direction:column;gap:7px}
+.block{border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:var(--bg);font-size:13px}
+.block .top{display:flex;justify-content:space-between;gap:10px;color:var(--ink-3);font-size:11.5px;
+  margin-bottom:4px;font-variant-numeric:tabular-nums}
+.block.tiny{border-color:var(--err);background:var(--err-soft)}
+.free{display:inline-block;background:var(--accent-soft);color:var(--accent-ink);
+  border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:600;margin-left:6px}
+
+iframe{width:100%;height:78vh;min-height:520px;border:1px solid var(--line);
+  border-radius:var(--radius);background:var(--surface)}
+.spin{color:var(--ink-3);font-size:13.5px;margin:14px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>书里的实测台</h1>
+  <p class="sub">《用人话讲 AI 名词》里那些<b>能上手</b>的例子，在这儿自己跑一遍。
+    每个台子上都标着它对应书里哪一节。</p>
+  <div id="banner" class="banner ok">正在看门上的牌子…</div>
+</header>
+
+<nav>
+  <button data-tab="param" class="on">参数台<small>3.3 3.5 3.6 3.7 3.8 3.10 · 2.10</small></button>
+  <button data-tab="timing">计时台<small>2.5 2.6</small></button>
+  <button data-tab="chunk">切法台<small>2.4 6.5</small></button>
+  <button data-tab="search">检索台<small>6.3 6.7 6.8 6.9 6.10</small></button>
+</nav>
+
+<!-- ── 参数台 ─────────────────────────────────────────────── -->
+<section class="panel on" id="p-param">
+  <p class="lede">同一句话发几遍，旋钮自己拧。
+    书里 3.2 节让你「同一句话问三遍，再把温度拧下去」，这一页就是那件事。</p>
+
+  <div class="card">
+    <h3>先挑一个题目</h3>
+    <p class="hint">每个题目照抄书里那一节「你照着做」写的那句话。挑完还能改。</p>
+    <div class="chips" id="presets"></div>
+
+    <label for="prompt">发给它的话</label>
+    <textarea id="prompt" rows="3"></textarea>
+
+    <label for="system" style="margin-top:14px">系统设定（可以空着）</label>
+    <textarea id="system" rows="2" placeholder="留空就不发系统设定"></textarea>
+
+    <div class="knobs">
+      <div class="knob"><label for="temp">temperature</label>
+        <input id="temp" type="text" placeholder="留空＝用默认">
+        <small>挑得有多挑剔。低＝几乎总挑分最高的那个</small></div>
+      <div class="knob"><label for="topp">top_p</label>
+        <input id="topp" type="text" placeholder="留空＝用默认">
+        <small>从前几名里挑。文档建议它和温度只动一个</small></div>
+      <div class="knob"><label for="maxtok">max_tokens</label>
+        <input id="maxtok" type="text" placeholder="留空＝用默认">
+        <small>这一次最多写多少。到了就停，不管说完没说完</small></div>
+      <div class="knob"><label for="n">发几遍</label>
+        <input id="n" type="number" min="1" max="5" value="3">
+        <small>最多 5 遍</small></div>
+    </div>
+
+    <div class="row" id="cmpRow" hidden>
+      <div><label id="cmpLabel">对照跑</label>
+        <div style="display:flex;gap:10px;align-items:center">
+          <input id="cmpA" type="text" style="flex:1">
+          <span style="color:var(--ink-3);font-size:13px">对</span>
+          <input id="cmpB" type="text" style="flex:1">
+        </div>
+      </div>
+    </div>
+
+    <div class="go">
+      <button class="run" id="paramGo">发出去</button>
+      <button class="ghost" id="cmpToggle">关掉对照</button>
+      <span class="cost" id="paramCost"></span>
+    </div>
+  </div>
+
+  <div id="paramWatch" class="verdict" hidden></div>
+  <div id="paramOut"></div>
+</section>
+
+<!-- ── 计时台 ─────────────────────────────────────────────── -->
+<section class="panel" id="p-timing">
+  <p class="lede">发出去掐表：第一个字什么时候出来，一共多久。
+    再贴三千字资料重来一遍——书里 2.6 节说，变长的是开口之前那一段，
+    开口之后一个字一个字往外吐的速度，跟你发了多长没关系。</p>
+
+  <div class="card">
+    <label for="tq">发给它的话</label>
+    <textarea id="tq" rows="2"></textarea>
+    <p class="hint" id="matNote" style="margin-top:10px"></p>
+    <div class="go">
+      <button class="run" id="tGo1">空着问</button>
+      <button class="ghost" id="tGo2">贴三千字资料再问同一句</button>
+      <span class="cost">一次算一次额度</span>
+    </div>
+  </div>
+
+  <div class="timing">
+    <div class="stream" id="s1">
+      <h4>空着问</h4>
+      <div class="nums"><div>首字延迟<b class="ttft">—</b></div><div>一共<b class="total">—</b></div>
+        <div>吐了<b class="chars">—</b></div></div>
+      <div class="bar"><i class="wait"></i><i class="gen"></i></div>
+      <p class="legend">深色那段是第一个字出来之前的等待，浅色那段是一个字一个字往外吐</p>
+      <div class="body"></div>
+    </div>
+    <div class="stream" id="s2">
+      <h4>贴了三千字再问</h4>
+      <div class="nums"><div>首字延迟<b class="ttft">—</b></div><div>一共<b class="total">—</b></div>
+        <div>吐了<b class="chars">—</b></div></div>
+      <div class="bar"><i class="wait"></i><i class="gen"></i></div>
+      <p class="legend">两边都跑完再比：变长的是哪一段</p>
+      <div class="body"></div>
+    </div>
+  </div>
+  <div id="timingVerdict"></div>
+</section>
+
+<!-- ── 切法台 ─────────────────────────────────────────────── -->
+<section class="panel" id="p-chunk">
+  <p class="lede">贴一段字，看它被切成什么样。
+    <span class="free">不花钱</span>
+    这一页全在本机算，一次接口都不调，所以额度用完了它照常能用。</p>
+
+  <div class="card">
+    <label for="ctext">贴一段字</label>
+    <textarea id="ctext" rows="5">美丽的小胖蟹呀，你是那么的可爱</textarea>
+    <div class="go">
+      <button class="run" id="chunkGo">切开看看</button>
+      <button class="ghost" data-fill="name">换成我的名字试试</button>
+      <button class="ghost" data-fill="long">贴一篇长文进来</button>
+    </div>
+  </div>
+  <div id="chunkOut"></div>
+</section>
+
+<!-- ── 检索台 ─────────────────────────────────────────────── -->
+<section class="panel" id="p-search">
+  <p class="lede">第 6 章那一整章讲的东西，做出来就是这个：
+    660 多篇已发布的文章和漫画，按意思搜，搜到了能点开原文核对。
+    语义路和字面路可以单独关掉切着看——书里 6.7、6.8、6.9 说的就是这三种。
+    <a href="/" target="_blank">在新标签里打开</a></p>
+  <iframe src="/" title="写过没有"></iframe>
+</section>
+
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let STATUS = {}, PRESETS = [], cur = null, cmpOn = true;
+
+// ── 门上的牌子 ───────────────────────────────────────────
+async function refreshStatus(){
+  try{
+    const r = await fetch('/api/lab/status');
+    if (r.status === 401){ location.reload(); return; }
+    STATUS = await r.json();
+  }catch(e){ return; }
+  const b = $('#banner');
+  if (STATUS.degraded){
+    b.className = 'banner';
+    b.innerHTML = `<b>${esc(STATUS.degraded_reason)}，现在是免费模式。</b>
+      检索退成字面匹配（按字词原样找，不按意思找），
+      参数台和计时台改show书里那次的实测记录，不再叫模型。` +
+      (STATUS.cap > 0 ? `今天全站已经用掉 ${STATUS.used} 次，上限 ${STATUS.cap} 次，明天零点回来。` : '');
+  } else {
+    b.className = 'banner ok';
+    b.innerHTML = `模型是 <b>${esc(STATUS.model)}</b>。` +
+      (STATUS.cap > 0
+        ? `今天全站还剩 <b>${STATUS.remain}</b> 次调用（用掉 ${STATUS.used}／${STATUS.cap}）。
+           用完不会把你挡在外面，只会退成字面匹配。`
+        : '没有设日上限。') +
+      `　单个人每分钟最多点 ${STATUS.rate_per_min} 次。`;
+  }
+}
+
+// ── 标签页 ───────────────────────────────────────────────
+document.querySelectorAll('nav button').forEach(btn => btn.onclick = () => {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b === btn));
+  document.querySelectorAll('.panel').forEach(p =>
+    p.classList.toggle('on', p.id === 'p-' + btn.dataset.tab));
+});
+
+// ── 参数台 ───────────────────────────────────────────────
+const PRESET_DEFS = [
+  {id:'nondeterminism',section:'3.5',title:'同一句话问三遍'},
+  {id:'temperature',section:'3.6',title:'温度拧到底，再拧到顶'},
+  {id:'top_p',section:'3.7',title:'top_p 放小，再放到 1'},
+  {id:'max_tokens',section:'3.8',title:'上限设成 50'},
+  {id:'cutoff',section:'3.3',title:'知识停在哪一天'},
+  {id:'cot',section:'3.10',title:'加一句「请一步一步来」'},
+  {id:'align',section:'2.10',title:'让它把系统设定交出来'},
+];
+let PRESET_DATA = {};
+
+function drawPresets(){
+  $('#presets').innerHTML = PRESET_DEFS.map(p =>
+    `<button class="chip" data-id="${p.id}"><span class="sec">${p.section}</span>${esc(p.title)}</button>`
+  ).join('');
+  $('#presets').querySelectorAll('.chip').forEach(c => c.onclick = () => pick(c.dataset.id));
+}
+
+function pick(id){
+  const p = PRESET_DATA[id];
+  if (!p) return;
+  cur = p;
+  $('#presets').querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+  $('#prompt').value = p.prompt;
+  $('#system').value = p.system || '';
+  $('#n').value = p.n;
+  $('#temp').value = p.params.temperature ?? '';
+  $('#topp').value = p.params.top_p ?? '';
+  $('#maxtok').value = p.params.max_tokens ?? '';
+  cmpOn = !!p.compare;
+  if (p.compare){
+    $('#cmpLabel').textContent = p.compare.field === 'prompt_suffix'
+      ? '对照跑：一次什么都不加，一次在后面加一句' : '对照跑：' + p.compare.field + ' 取两个值';
+    $('#cmpA').value = p.compare.a ?? '';
+    $('#cmpB').value = p.compare.b ?? '';
+  }
+  $('#cmpRow').hidden = !p.compare;
+  $('#cmpToggle').hidden = !p.compare;
+  $('#cmpToggle').textContent = cmpOn ? '关掉对照' : '开对照';
+  $('#paramWatch').hidden = false;
+  $('#paramWatch').textContent = '看这个：' + p.watch;
+  updateCost();
+}
+
+function updateCost(){
+  const n = Math.max(1, Math.min(+$('#n').value || 1, 5));
+  const mult = (cur && cur.compare && cmpOn) ? 2 : 1;
+  $('#paramCost').textContent = `这一下要发 ${n * mult} 遍，扣 ${n * mult} 次额度`;
+}
+$('#n').oninput = updateCost;
+$('#cmpToggle').onclick = () => {
+  cmpOn = !cmpOn;
+  $('#cmpRow').hidden = !cmpOn;
+  $('#cmpToggle').textContent = cmpOn ? '关掉对照' : '开对照';
+  updateCost();
+};
+
+$('#paramGo').onclick = async () => {
+  const btn = $('#paramGo');
+  btn.disabled = true; btn.textContent = '发出去了，等它写…';
+  $('#paramOut').innerHTML = '<p class="spin">正在等它写完。对照跑是两组一起发，会慢一点。</p>';
+  const num = v => { const t = (v || '').trim(); return t === '' ? null : (isNaN(+t) ? t : +t); };
+  const body = {
+    preset: cur ? cur.id : '',
+    prompt: $('#prompt').value,
+    system: $('#system').value,
+    temperature: num($('#temp').value),
+    top_p: num($('#topp').value),
+    max_tokens: num($('#maxtok').value),
+    n: +$('#n').value || 1,
+  };
+  if (cur && cur.compare && cmpOn){
+    body.compare = {field: cur.compare.field, a: num($('#cmpA').value), b: num($('#cmpB').value)};
+    if (cur.compare.field === 'prompt_suffix'){
+      body.compare.a = $('#cmpA').value; body.compare.b = $('#cmpB').value;
+    }
+  }
+  try{
+    const r = await fetch('/api/lab/param', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)});
+    if (r.status === 401){ location.reload(); return; }
+    const d = await r.json();
+    if (r.status === 429){ $('#paramOut').innerHTML = `<div class="err">${esc(d.error)}</div>`; }
+    else drawParam(d);
+    if (d.quota) { STATUS = d.quota; refreshStatus(); }
+  }catch(e){
+    $('#paramOut').innerHTML = `<div class="err">没发出去：${esc(e.message)}</div>`;
+  }
+  btn.disabled = false; btn.textContent = '发出去';
+};
+
+function drawParam(d){
+  if (d.error) return $('#paramOut').innerHTML = `<div class="err">${esc(d.error)}</div>`;
+  if (d.degraded) return $('#paramOut').innerHTML = fromBook(d);
+  let html = '';
+  if (d.ran_out) html += `<div class="err">${esc(d.ran_out)}</div>`;
+  html += `<div class="groups${d.groups.length > 1 ? ' two' : ''}">` + d.groups.map(g => `
+    <div class="group">
+      <h4>${esc(g.label)}<em>${g.runs.length} 遍・不一样的 ${g.distinct} 种</em></h4>
+      ${g.runs.map((r, i) => r.ok ? `
+        <div class="run">${esc(r.text) || '<em style="color:var(--ink-3)">它什么都没说</em>'}
+          <span class="meta">第 ${i + 1} 遍・${r.ms} 毫秒・输出 ${r.completion_tokens ?? '?'} token${
+            r.finish_reason === 'length' ? '・<span class="cut">写到上限被切断了</span>' : ''}</span></div>`
+        : `<div class="run"><span class="cut">${esc(r.error)}</span></div>`).join('')}
+    </div>`).join('') + '</div>';
+  const notes = d.groups.filter(g => g.runs.length > 1).map(g =>
+    g.all_same ? `「${esc(g.label)}」那几遍<b>一字不差</b>。`
+               : `「${esc(g.label)}」${g.runs.length} 遍给出了 ${g.distinct} 种不同的答案。`);
+  const cut = d.groups.some(g => g.runs.some(r => r.finish_reason === 'length'));
+  if (cut) notes.push('有一组的 finish_reason 是 length——它不是不会答，是这一次的额度写完了。');
+  if (notes.length) html += `<div class="verdict">${notes.join(' ')}</div>`;
+  $('#paramOut').innerHTML = html;
+}
+
+function fromBook(d){
+  const rec = d.record;
+  return `<div class="frombook">
+    <h4>${esc(d.reason)}，下面是书里 ${esc(rec.section)} 节那次的实测记录</h4>
+    <p style="margin:0 0 10px;color:var(--ink-2)">这是她写书时跑的那一次，不是你刚才这次。${esc(rec.note)}</p>
+    ${rec.groups.map(g => `<div style="margin:0 0 8px"><b>${esc(g.label)}</b>
+      <div style="margin-top:4px">${g.runs.map(t => `<div class="run" style="border:0;padding:3px 0">${esc(t)}</div>`).join('')}</div>
+    </div>`).join('')}
+    <p style="margin:10px 0 0">${esc(rec.conclusion)}</p></div>`;
+}
+
+// ── 计时台 ───────────────────────────────────────────────
+let MATERIAL = null;
+async function loadMaterial(){
+  try{
+    const r = await fetch('/api/lab/material');
+    if (!r.ok) return;
+    MATERIAL = await r.json();
+    if (MATERIAL.ok) $('#matNote').textContent =
+      `要贴的那三千字，取自她自己发过的《${MATERIAL.title}》，截到 ${MATERIAL.chars} 字。`;
+  }catch(e){}
+}
+
+function runTiming(which){
+  const q = $('#tq').value.trim();
+  if (!q) return;
+  const box = $(which === 1 ? '#s1' : '#s2');
+  const body = box.querySelector('.body');
+  body.textContent = ''; box.querySelector('.ttft').textContent = '…';
+  box.querySelector('.total').textContent = '…'; box.querySelector('.chars').textContent = '…';
+  box.querySelector('.bar .wait').style.width = '0'; box.querySelector('.bar .gen').style.width = '0';
+  $('#timingVerdict').innerHTML = '';
+  const es = new EventSource(`/api/lab/timing?q=${encodeURIComponent(q)}&ctx=${which === 2 ? 1 : 0}`);
+  let ttft = null;
+  es.onmessage = ev => {
+    const d = JSON.parse(ev.data);
+    if (d.type === 'degraded'){
+      body.innerHTML = fromBook({reason: d.reason, record: d.record});
+      es.close();
+    } else if (d.type === 'meta'){
+      box.querySelector('h4').textContent = which === 1
+        ? `空着问・发过去 ${d.input_chars} 字`
+        : `贴了《${d.ctx_title}》前 ${d.ctx_chars} 字・发过去 ${d.input_chars} 字`;
+    } else if (d.type === 'delta'){
+      if (ttft === null){ ttft = d.ttft_ms; box.querySelector('.ttft').textContent = ttft + ' ms'; }
+      body.textContent += d.text; body.scrollTop = body.scrollHeight;
+    } else if (d.type === 'error'){
+      body.innerHTML = `<span style="color:var(--err)">${esc(d.text)}</span>`; es.close();
+    } else if (d.type === 'done'){
+      if (d.total_ms){
+        box.querySelector('.total').textContent = (d.total_ms / 1000).toFixed(1) + ' s';
+        box.querySelector('.chars').textContent = d.chars + ' 字';
+        const w = Math.round((d.ttft_ms || 0) / d.total_ms * 100);
+        box.querySelector('.bar .wait').style.width = w + '%';
+        box.querySelector('.bar .gen').style.width = (100 - w) + '%';
+        box.dataset.ttft = d.ttft_ms; box.dataset.total = d.total_ms;
+        compareTiming();
+      }
+      es.close();
+    }
+  };
+  es.onerror = () => es.close();
+}
+$('#tGo1').onclick = () => runTiming(1);
+$('#tGo2').onclick = () => runTiming(2);
+
+function compareTiming(){
+  const a = $('#s1').dataset.ttft, b = $('#s2').dataset.ttft;
+  if (!a || !b) return;
+  const ratio = (b / a).toFixed(1);
+  $('#timingVerdict').innerHTML = `<div class="verdict">
+    贴了三千字之后，第一个字慢了 <b>${ratio} 倍</b>（${a} ms → ${b} ms）。
+    这就是书里 2.6 节说的：发过去的东西越长，长的是开口之前那一段。</div>`;
+}
+
+// ── 切法台 ───────────────────────────────────────────────
+document.querySelectorAll('[data-fill]').forEach(b => b.onclick = () => {
+  if (b.dataset.fill === 'name') $('#ctext').value = '静姐一家\n小胖蟹';
+  else $('#ctext').value = LONG_SAMPLE;
+  $('#chunkGo').click();
+});
+
+const LONG_SAMPLE = `## 为什么要切
+
+长文章要先切成一段一段，检索的时候是按块找的，不是按整篇找。模型一次看得下的有限，而且整篇一起算相似度，重点会被稀释。一篇三千字的文章里只有一段讲你要的事，那一段的信号会被另外两千九百字盖掉。
+
+## 常见的切法
+
+按固定字数切最省事，也最容易把一句话拦腰截断。按段落和标题切，顺着作者本来的分法走，多数时候够用。让两块之间留一点重叠，前一块的结尾抄进后一块的开头，防的就是重要的话正好断在缝上。
+
+## 有一个坑值得单说
+
+切开之后，每一块都不知道自己是谁了。一块内容写着「这个按上次说的办」，它被单独捞出来的时候，「上次」是谁，没人知道了。解决办法是切的时候给每一块补上出处，哪篇文章、哪个小标题下面的。这一步很便宜，效果很明显。
+
+## 切错了不报错
+
+切得太碎，一段话的意思断在中间；切得太大，重点被稀释。它不会告诉你切错了，你只会发现怎么搜不着。`;
+
+$('#chunkGo').onclick = async () => {
+  const text = $('#ctext').value;
+  if (!text.trim()) return;
+  $('#chunkOut').innerHTML = '<p class="spin">正在切…</p>';
+  const r = await fetch('/api/lab/chunk', {method:'POST',
+    headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+  if (r.status === 401){ location.reload(); return; }
+  drawChunk(await r.json());
+};
+
+function drawChunk(d){
+  if (d.error) return $('#chunkOut').innerHTML = `<div class="err">${esc(d.error)}</div>`;
+  const t = d.tokens, c = d.chunks, lib = d.library;
+  let html = '';
+
+  html += `<div class="card"><h3>它眼里的最小单位（书里 2.4 节）</h3>
+    <p class="hint">这 ${t.chars} 个字符里有 ${t.cjk} 个汉字，存成 UTF-8 是 ${t.bytes} 个字节。
+      下面两份都是真词表，不是估的。紫色那种是半个字——词表里没收这个字，它被按字节劈开了。</p>`;
+  if (!t.ok){
+    html += `<div class="err">词表没加载起来：${esc(t.error)}</div>`;
+  } else {
+    t.vocabs.forEach(v => {
+      html += `<div style="margin:16px 0 0"><b>${esc(v.label)}</b>
+        <span style="color:var(--ink-3);font-size:12.5px">（${esc(v.name)}）</span>
+        <span style="float:right;font-weight:650;color:var(--accent)">${v.count} 个 token</span>
+        <div style="clear:both"></div>
+        <div style="color:var(--ink-3);font-size:12.5px">${esc(v.note)}${
+          v.split_chars ? `・这段里有 <b style="color:var(--byte)">${v.split_chars}</b> 片是被劈开的半个字` : ''}</div>
+        <div class="toks">${v.pieces.map(p => p.whole
+          ? `<span class="tok${p.text.trim() ? '' : ' sp'}">${esc(p.text) || '␣'}</span>`
+          : `<span class="tok part">${esc(p.text)}</span>`).join('')}</div></div>`;
+    });
+    if (t.ratio && t.ratio !== '1.0')
+      html += `<div class="verdict">同一段字，上一代那份词表切出来是新词表的 <b>${t.ratio} 倍</b>。
+        拿 token 数跨厂商比大小，比不出什么——各家一个 token 装的东西不一样。</div>`;
+    html += `<p class="hint" style="margin:14px 0 0">另外还有一笔你打不出来的账：
+      每轮对话都要带一段你看不见的模板（<code>&lt;|im_start|&gt;</code> 那一串），
+      光这段模板本身就是 ${t.template_overhead} 个 token。书里那次量的是七个汉字算成 18 个。</p>`;
+  }
+  html += '</div>';
+
+  html += `<div class="card"><h3>切成块（书里 6.5 节）</h3>
+    <p class="hint">用的就是那个库自己的切法：按段落和标题走，目标 ${c.target} 字一块，
+      单段超过 ${c.hard_max} 字硬切，两块之间留一点重叠。</p>
+    <table><tr><th>一块多长</th><th class="n">多少块</th></tr>
+      <tr><td>200 到 500 字</td><td class="n big">${c.buckets['200_500']}</td></tr>
+      <tr><td>30 到 200 字</td><td class="n">${c.buckets['30_200']}</td></tr>
+      <tr><td>500 字以上</td><td class="n">${c.buckets.gt500}</td></tr>
+      <tr><td>不到 30 字</td><td class="n">${c.buckets.lt30}</td></tr></table>
+    <p class="hint" style="margin-top:12px">${c.chars} 个字切成了 ${c.total} 块。${
+      c.fell_back ? '<b style="color:var(--err)">这段字切不出块——按段落走走到头也没凑够 30 字，'
+        + '只好把整段当一块。书里那 18 个不到 30 字的块就是这么来的：正文本来就是图，没字可切。</b>' : ''}</p>
+    <div class="blocks">${c.chunks.map(b => `<div class="block${b.len < 30 ? ' tiny' : ''}">
+      <div class="top"><span>${b.heading ? esc(b.heading) : '（没有小标题）'}</span><span>${b.len} 字</span></div>
+      ${esc(b.preview)}${b.len > 120 ? '…' : ''}</div>`).join('')}</div></div>`;
+
+  if (lib && lib.chunks){
+    html += `<div class="card"><h3>顺带看一眼这个库自己被切成了什么样</h3>
+      <p class="hint">${lib.docs} 篇文章和漫画，切出 ${lib.chunks} 个块，中位数一块 ${lib.median} 字。
+        现算的，不是书里抄的。</p>
+      <table><tr><th>一块多长</th><th class="n">多少块</th></tr>
+        <tr><td>200 到 500 字</td><td class="n big">${lib.buckets['200_500']}</td></tr>
+        <tr><td>30 到 200 字</td><td class="n">${lib.buckets['30_200']}</td></tr>
+        <tr><td>500 字以上</td><td class="n">${lib.buckets.gt500}</td></tr>
+        <tr><td>不到 30 字</td><td class="n">${lib.buckets.lt30}</td></tr></table>`;
+    if (lib.shortest.length)
+      html += `<p class="hint" style="margin-top:12px">最短的那几块长这样——
+        这几块在库里等于不存在，跟任何一个问题算相似度都不像，永远排不进前几条：</p>
+        <div class="blocks">${lib.shortest.map(s => `<div class="block tiny">
+          <div class="top"><span>${esc(s.kind)}</span><span>${s.text.length} 字</span></div>
+          ${esc(s.text)}</div>`).join('')}</div>`;
+    html += '</div>';
+  }
+  $('#chunkOut').innerHTML = html;
+}
+
+// ── 起来 ─────────────────────────────────────────────────
+(async function init(){
+  drawPresets();
+  try{
+    const r = await fetch('/api/lab/presets');
+    if (r.ok) PRESET_DATA = await r.json();
+  }catch(e){}
+  await refreshStatus();
+  await loadMaterial();
+  $('#tq').value = (PRESET_DATA.__timing__ && PRESET_DATA.__timing__.prompt) || '';
+  if (PRESET_DEFS.length) pick(PRESET_DEFS[0].id);
+})();
+</script>
+</body>
+</html>

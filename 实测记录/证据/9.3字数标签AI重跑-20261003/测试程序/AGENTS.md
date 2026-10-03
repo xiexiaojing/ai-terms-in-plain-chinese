@@ -1,0 +1,1 @@
+仅修改本目录的程序，实现用户要求，不操作外部项目，不调用模型API，不启动服务，不委派其他代理。只需修改scripts/server.py和web/index.html。可使用/Users/xiexiaojing/workspace/gzh-rag/.venv/bin/python做语法检查。

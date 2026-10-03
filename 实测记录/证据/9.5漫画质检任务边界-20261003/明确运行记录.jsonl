@@ -1,0 +1,9 @@
+{"type":"thread.started","thread_id":"01a1007f-ab4e-7550-a8d0-eef2fbcce021"}
+{"type":"turn.started"}
+{"type":"error","message":"Reconnecting... 2/5 (request timed out)"}
+{"type":"error","message":"Reconnecting... 3/5 (request timed out)"}
+{"type":"error","message":"Reconnecting... 4/5 (request timed out)"}
+{"type":"error","message":"Reconnecting... 5/5 (request timed out)"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Falling back from WebSockets to HTTPS transport. request timed out"}}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"左边人物：\n- 手臂：双臂可见，未见残缺。\n- 手指：左下方露出的手未见明显多指或少指；另一只手被手臂/袖子遮挡，无法判断。\n\n右边人物：\n- 手臂：双臂可见，未见残缺。\n- 手指：托下巴的手部分可见，未见明显多指或少指，但部分手指被遮挡，无法完全判断；桌面上的另一只手被遮挡，无法判断。"}}
+{"type":"turn.completed","usage":{"input_tokens":34877,"cached_input_tokens":2432,"output_tokens":404,"reasoning_output_tokens":277}}
