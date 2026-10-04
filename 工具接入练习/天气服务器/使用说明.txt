@@ -1,0 +1,28 @@
+天气服务器：用现成程序给AI工具接入天气查询
+
+1. 下载与连接
+把本目录交给你使用的电脑版AI工具，说：
+“请阅读使用说明，帮助我安装并连接这个天气MCP服务器。使用已有Python或安装uv，核对我的AI工具的MCP配置入口，只增加book-weather，不覆盖其他服务；连接后列出两个天气工具。遇到要我操作的界面，请告诉我点哪里。”
+
+MCP设置中选择本地服务/STDIO。服务名称book-weather；命令uv；参数依次为run、weather.py的完整路径。uv run会按weather.py开头声明准备Python与依赖。若找不到uv，填写uv程序的完整路径。不要把weather.py双击后没有窗口当成故障；STDIO服务由客户端启动。
+
+通用JSON示例见MCP配置示例.json。支持表单配置的工具把command和args逐项填入即可。不同工具配置入口有区别，使用该工具的官方说明。本程序不需要天气API Key。
+
+2. 提问
+连接并重新加载后，新开对话：
+“纽约明天的天气怎样？请用刚接入的天气工具查询，按纽约当地日期说明明天是哪天，并标出温度单位。”
+get_forecast的默认经纬度是纽约市。它返回每一时段的当地开始时间、气温、风和预报，不把机器所在时区直接当成纽约日期。
+还可问：“请用天气工具查纽约州现在有哪些天气警报。”工具get_alerts的州代码是NY；纽约州的警报不一定覆盖纽约市。
+
+3. 核对
+打开工具调用详情，查看book-weather的get_forecast是否调用成功，返回里有没有periods、startTime、temperature、temperatureUnit和source_url。打开source_url，可对照NWS原始返回。仅看AI最后说“已查询”不够。
+调用失败时先保留错误，不让AI编造天气。NWS示例查美国地点，不拿北京或上海来验收。NWS天气接口免密钥；使用的AI工具按自身套餐或调用价格收费。
+
+程序与测试
+Python 3.10及以上，依赖锁定mcp==2.3.0；uv可自动准备运行环境。已有Python时，也可在独立环境安装该依赖，然后用该环境的Python启动weather.py。
+本机协议调用记录.json记录SDK客户端对服务器的真实调用；不等同于桌面AI工具中模型自动选工具的实测。
+
+来源（核对日期2026-10-04）
+MCP官方天气示例：https://modelcontextprotocol.io/docs/develop/build-server
+NWS接口说明：https://www.weather.gov/documentation/services-web-api
+本程序依据上述接口和流程重新实现，并非官方示例代码原文件。

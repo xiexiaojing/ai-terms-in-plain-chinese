@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "book-weather": {
+      "command": "uv",
+      "args": ["run", "替换为天气服务器文件夹的完整路径/weather.py"]
+    }
+  }
+}
