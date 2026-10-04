@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-03",
+  "url": "http://127.0.0.1:7788/",
+  "trigger": "DOMContentLoaded：页面就绪",
+  "firstOpen": {
+    "runs": 1,
+    "visible": true,
+    "title": "加油加油，静姐最棒！",
+    "animations": 4,
+    "motion": "matrix(0.999977, 0.00682482, -0.00682482, 0.999977, 0, -2.96639)"
+  },
+  "motionChanged": true,
+  "buttonDismissed": true,
+  "reloadAutoPlayed": true,
+  "escapeDismissed": true,
+  "mobileHorizontalOverflow": false,
+  "pageErrors": []
+}

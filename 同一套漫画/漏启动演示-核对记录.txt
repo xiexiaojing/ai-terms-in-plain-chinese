@@ -1,0 +1,41 @@
+日期：2026-10-04
+通过内置浏览器实际点击。正常三次均交付；跳过第二次后，内部记录无第二次失败，外部核对指出缺失；补跑后如下。
+- main:
+  - heading "计划有三次，实际做了几次？" [level=1]
+  - paragraph: 同一套漫画的三次交付检查。点击按钮推进演示，观察漏掉一次启动后，谁能发现。
+  - checkbox "跳过第二次" [checked]
+  - text: 跳过第二次
+  - button "运行下一次计划"
+  - button "外部核对"
+  - button "补跑第二次" [active]
+  - button "重新开始"
+  - table:
+    - rowgroup:
+      - row "预定任务 实际启动 交付":
+        - columnheader "预定任务"
+        - columnheader "实际启动"
+        - columnheader "交付"
+    - rowgroup:
+      - row "第1次：交付漫画 已启动 成品与核验记录齐全":
+        - cell "第1次：交付漫画"
+        - cell "已启动"
+        - cell "成品与核验记录齐全"
+      - row "第2次：交付漫画 已启动 成品与核验记录齐全":
+        - cell "第2次：交付漫画"
+        - cell "已启动"
+        - cell "成品与核验记录齐全"
+      - row "第3次：交付漫画 已启动 成品与核验记录齐全":
+        - cell "第3次：交付漫画"
+        - cell "已启动"
+        - cell "成品与核验记录齐全"
+  - article:
+    - heading "任务自己的记录" [level=2]
+    - generic: 第1次：已交付漫画与核验记录 第3次：已交付漫画与核验记录 第2次：补跑，已交付漫画与核验记录
+  - article:
+    - heading "任务外的检查" [level=2]
+    - generic: 三次计划都有对应交付。
+  - paragraph:
+    - text: 本机教学演示：由按钮推进三次计划；不调用模型，不是定时服务实测。交付沿用
+    - link "当前漫画":
+      - /url: 20261004实跑/成品-v1.html
+    - text: 。重新开始会清空本页演示状态。

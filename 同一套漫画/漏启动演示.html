@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>计划有三次，实际做了几次？</title><style>
+*{box-sizing:border-box}body{font:18px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#222;background:#f5f5f3;margin:0;padding:30px}main{max-width:1000px;margin:auto;background:white;padding:30px;border:1px solid #ddd;border-radius:12px}h1{font-size:27px;margin:0 0 8px}p{margin:8px 0 20px;color:#555}.controls{display:flex;align-items:center;gap:16px;margin:20px 0}button{font:inherit;background:#222;color:white;border:0;border-radius:6px;padding:9px 16px;cursor:pointer}button.secondary{background:white;color:#222;border:1px solid #aaa}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{text-align:left;padding:10px;border-bottom:1px solid #ddd}th{background:#f4f4f4}section{display:grid;grid-template-columns:1fr 1fr;gap:20px}article{background:#f7f7f5;border:1px solid #ddd;padding:18px;border-radius:8px}h2{font-size:20px;margin:0 0 12px}pre{white-space:pre-wrap;font:16px/1.7 monospace;margin:0}.note{font-size:15px}#result{font-weight:600}a{color:#222}</style><main>
+<h1>计划有三次，实际做了几次？</h1><p>同一套漫画的三次交付检查。点击按钮推进演示，观察漏掉一次启动后，谁能发现。</p>
+<div class="controls"><label><input id="skip" type="checkbox"> 跳过第二次</label><button id="run">运行下一次计划</button><button id="check">外部核对</button><button class="secondary" id="repair">补跑第二次</button><button class="secondary" id="reset">重新开始</button></div>
+<table><thead><tr><th>预定任务</th><th>实际启动</th><th>交付</th></tr></thead><tbody id="rows"></tbody></table>
+<section><article><h2>任务自己的记录</h2><pre id="log">尚未启动</pre></article><article><h2>任务外的检查</h2><pre id="result">尚未核对</pre></article></section>
+<p class="note">本机教学演示：由按钮推进三次计划；不调用模型，不是定时服务实测。交付沿用<a href="20261004实跑/成品-v1.html">当前漫画</a>。重新开始会清空本页演示状态。</p>
+<script>
+let cursor=0,actual=[false,false,false],logs=[];
+function show(){document.getElementById('rows').innerHTML=actual.map((done,i)=>`<tr><td>第${i+1}次：交付漫画</td><td>${done?'已启动':i<cursor?'—':'待执行'}</td><td>${done?'成品与核验记录齐全':i<cursor?'—':'待交付'}</td></tr>`).join('');document.getElementById('log').textContent=logs.join('\n')||'尚未启动'}
+function run(){if(cursor>=3)return;let i=cursor++;if(!(i===1&&document.getElementById('skip').checked)){actual[i]=true;logs.push(`第${i+1}次：已交付漫画与核验记录`)}show()}
+function check(){let missing=actual.map((d,i)=>!d&&i<cursor?i+1:0).filter(Boolean);document.getElementById('result').textContent=cursor===0?'尚未到执行步骤':missing.length?`未收到第${missing.join('、')}次交付。\n任务自身没有失败记录，也不能判定已完成。`:cursor===3?'三次计划都有对应交付。':'已执行的计划都有交付，其余尚待执行。'}
+document.getElementById('run').onclick=run;document.getElementById('check').onclick=check;
+document.getElementById('repair').onclick=()=>{if(cursor<2||actual[1])return;actual[1]=true;logs.push('第2次：补跑，已交付漫画与核验记录');show();check()};
+document.getElementById('reset').onclick=()=>{cursor=0;actual=[false,false,false];logs=[];document.getElementById('skip').checked=false;document.getElementById('result').textContent='尚未核对';show()};show();
+</script></main></html>

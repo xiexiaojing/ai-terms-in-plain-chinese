@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-03",
+  "browser": "154.0.8037.93",
+  "platform": "macOS",
+  "page": "file:// 本机双击模式",
+  "canvas": "人物测试1200×600，故事1200×900；PNG默认2倍",
+  "panels": [
+    {
+      "panel": 0,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 1,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 2,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 3,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 4,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 5,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 6,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 7,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 8,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 9,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 10,
+      "errors": [],
+      "textMatch": true
+    },
+    {
+      "panel": 11,
+      "errors": [],
+      "textMatch": true
+    }
+  ],
+  "sceneExportCount": 12,
+  "sceneExportSeconds": 0.315,
+  "singleEdit": {
+    "ms": 0.19999998807907104,
+    "exact": true,
+    "measurement": "事件处理和DOM更新耗时"
+  },
+  "overflowWarning": "文字过长，已占用人物区；请缩短文案或分成两格",
+  "networkRequests": [],
+  "zipCRC": "12个PNG全部通过"
+}

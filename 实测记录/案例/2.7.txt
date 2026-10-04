@@ -1,4 +1,4 @@
-## 2.7　Transformer：用注意力机制处理上下文的模型结构
+## 2.7　Transformer：用注意力机制处理上下文的模型结构（选读）
 
 Transformer 是一种模型结构，出自谷歌 2017 年的论文《Attention Is All You Need》。许多大语言模型采用它或它的变体。
 

@@ -1,0 +1,26 @@
+const {chromium}=require('/Users/xiexiaojing/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs'),path=require('path');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
+ const page=await browser.newPage({viewport:{width:1740,height:1180},deviceScaleFactor:2});
+ await page.goto('file://'+path.join(__dirname,'成品-v1.html'));
+ await page.evaluate(()=>document.fonts.ready);
+ await page.locator('#comic').screenshot({path:path.join(__dirname,'四格成品-v1.png')});
+ await page.screenshot({path:path.join(__dirname,'排字界面.png')});
+ const expected=JSON.parse(fs.readFileSync(path.join(__dirname,'../文案.json'),'utf8'));
+ const strings=await page.locator('svg text').allTextContents();
+ if(JSON.stringify(strings)!==JSON.stringify([...expected.旁白,...expected.台词]))throw Error('排字与原文不一致');
+ const metrics=await page.locator('svg').evaluate(el=>[...el.querySelectorAll('text')].map(t=>{const b=t.getBBox();return {文字:t.textContent,x:b.x,y:b.y,width:b.width,height:b.height}}));
+ const before=await page.locator('svg image').getAttribute('href');
+ const edited=expected.旁白[0].replace('上一年级','读一年级');
+ const start=performance.now();
+ await page.locator('input').first().fill(edited);
+ await page.waitForFunction(t=>document.querySelector('svg text').textContent===t,edited);
+ const updateMs=performance.now()-start;
+ if(before!==await page.locator('svg image').getAttribute('href'))throw Error('改字更换了底图');
+ await page.locator('#comic').screenshot({path:path.join(__dirname,'四格成品-改单字.png')});
+ fs.writeFileSync(path.join(__dirname,'改字后.svg'),await page.locator('svg').evaluate(el=>new XMLSerializer().serializeToString(el)));
+ fs.writeFileSync(path.join(__dirname,'文字核对与改字.json'),JSON.stringify({文字逐项匹配:true,改前:expected.旁白[0],改后:edited,改字并等待界面更新毫秒:updateMs,画面数据未变:true,本轮模型调用:0,文字边界:metrics},null,2));
+ await browser.close();
+ console.log(JSON.stringify({文字逐项匹配:true,画面数据未变:true,改字并等待界面更新毫秒:updateMs}));
+})().catch(e=>{console.error(e);process.exit(1)});

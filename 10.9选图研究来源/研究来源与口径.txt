@@ -1,0 +1,11 @@
+1. Gali, Najlah; Tabarcea, Andrei; Fränti, Pasi (2015). Extracting Representative Image from Web Page. WEBIST 2015, pp. 411–419. DOI: 10.5220/0005438704110419.
+作者机构原文：https://cs.uef.fi/sipu/pub/WebIma2015.pdf
+位置：第7页（印刷页417），表3及上方测试说明。
+测试时间：2014年9月17–25日。1002个网页，对照人工标注的代表图片，比较首次选择。Facebook 39%，Google+ 48%，WebIma 64%。测试由研究者执行，非Facebook官方公布。不能据此推定2010年准确率。
+
+2. Vyas, Krishna; Frasincar, Flavius (2020). Determining the most representative image on a Web page. Information Sciences 512, pp.1234–1248. DOI:10.1016/j.ins.2019.10.045.
+机构正式版本：https://repub.eur.nl/pub/120988/Repub_120988.pdf
+出版页：https://www.sciencedirect.com/science/article/abs/pii/S002002551931014X
+位置：表1，Facebook行，WP Acc.（网页选图准确率）为32.4%。图像二分类Acc. 93.7%、Precision30.1%、Recall17.9%及F1 22.4%是其他指标，不与WP Acc.混用。
+
+两项研究与作者2010年公司2000篇文章的人工核验范围和口径不同，不能直接排名或计算提升倍率，也不能由39%和32.4%推断Facebook后来变差。书稿保留作者根据实际来源与布局解决业务问题的成果，外部研究只说明任务并不简单。核对日期：2026-10-03。
